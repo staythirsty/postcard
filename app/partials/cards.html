@@ -1,0 +1,166 @@
+
+
+<div class="row">
+
+	<div class="col-md-3" ng-controller="DecksCtrl">
+		<div class="panel-group" id="accordion">
+ 			<div class="panel panel-default" ng-repeat="deck in decks">
+    			<div class="panel-heading">
+					<h4 class="panel-title">
+						<div class="row" style="padding: 5px 10px;">
+
+							<div class="col-md-6">
+								<a data-toggle="collapse" data-parent="#accordion" href="#collapse{{deck.id}}">
+						          {{deck.name}}
+						        </a>
+							</div>
+
+							<div class="col-md-2">
+								<a ng-click="">
+									<span class="glyphicon glyphicon-wrench"></span>
+								</a>
+							</div>
+
+							<div class="col-md-2">
+								<a ng-click="save()">
+									<span class="glyphicon glyphicon-floppy-save"></span>
+								</a>
+							</div>
+							<div class="col-md-2">
+								<a ng-click="addCard()">
+									<span class="glyphicon glyphicon-plus-sign"></span>
+								</a>
+							</div>
+						</div>
+					</h4>
+				</div>
+			    <div id="collapse{{deck.id}}" class="panel-collapse collapse in">
+			      	<div class="panel-body">
+
+
+			      		<div class="row" style="padding: 5px 10px;" ng-repeat="card in deck.cards">
+			      			<div class="col-md-3">
+			      				<span class="badge">{{card.httpMethod}}</span>
+			      			</div>
+			      			<div class="col-md-7">
+			      				<a href="#/cards/{{card.id}}" class="pull-left"> {{card.name}}</a>
+			      			</div>
+							<div class="col-md-2">
+									<a ng-click="removeCard(card.id);">
+										<span class="glyphicon glyphicon-minus-sign"></span>
+									</a>
+							</div>
+			      		</div>
+
+					</div>
+			    </div>
+  			</div>
+		</div>
+	</div>
+
+
+	<div class="col-md-9" ng-controller="CardCtrl">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<b>{{card.name}}</b>
+			</div>
+			<div class="panel-body">
+  			<form class="form-horizontal" role="form">
+			  <div class="form-group">
+			    <label for="cardName" class="col-sm-2 control-label">Name</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="cardName" placeholder="Name" ng-model="card.name">
+			    </div>
+			  </div>
+			  <!--
+			  <div class="form-group">
+			    <label for="cardDescription" class="col-sm-2 control-label">Description</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="cardDescription" placeholder="Description" ng-model="card.description">
+			    </div>
+			  </div>
+			-->
+			  <div class="form-group">
+			    <label for="cardURL" class="col-sm-2 control-label">URL</label>
+			    <div class="col-sm-2">
+			    	<select class="form-control" id="httpMethod" ng-model="card.httpMethod">
+					  <option>GET</option>
+					  <option>POST</option>
+					  <option>PUT</option>
+					  <option>DELETE</option>
+					</select>
+			    </div>
+			    <div class="col-sm-8">
+					<input type="text" class="form-control" id="cardURL" placeholder="url" ng-model="card.url">
+			    </div>
+			  </div>
+
+			  <div class="form-group" >
+			    <label for="requestData" class="col-sm-2 control-label">Headers</label>
+			    <div class="col-sm-10">
+
+			    	<button type="button" class="btn btn-default" ng-hide="card.headers.length > 0" ng-click="addHeader()">
+			    				<span class="glyphicon glyphicon-plus"></span>
+					</button>
+			    	<div class="row form-group" ng-repeat="header in card.headers">
+			    		<div class="col-sm-3">
+			    			<input type="text" class="form-control" ng-model="header.key">
+			    		</div>
+			    		<div class="col-sm-7">
+			    			<input type="text" class="form-control" ng-model="header.value">
+			    		</div>
+			    		<div class="col-sm-2">
+							<a ng-click="removeHeader(header.key)">
+								<span class="glyphicon glyphicon-minus-sign"></span>
+							</a>
+							<a ng-click="addHeader()">
+								<span class="glyphicon glyphicon-plus-sign"></span>
+							</a>
+			    		</div>
+			    	</div>
+			    </div>
+			  </div>
+
+
+			  <div class="form-group" ng-hide="card.httpMethod == 'GET' || card.httpMethod == 'DELETE'">
+			    <label for="requestData" class="col-sm-2 control-label">Request</label>
+			    <div class="col-sm-10">
+			    	<textarea class="form-control" rows="3" ng-model="card.requestData"></textarea>
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <div class="col-sm-10 col-md-offset-2">
+			    	<button type="button" ng-click="submit()" class="btn btn-primary">Submit</button>
+			    	<button type="button" ng-click="reset()" class="btn btn-warning">Reset</button>
+			    	<button type="button" ng-click="refreshView()" class="btn btn-warning">View</button>
+			    </div>
+			  </div>
+
+			  <div class="form-group">
+			    <label for="responseData" class="col-sm-2 control-label">Response</label>
+			    <div class="col-sm-10">
+			    	<textarea class="form-control" rows="3" id="response" ng-model="card.response"></textarea>
+			    </div>
+			  </div>
+
+			  <div class="form-group">
+			    <label for="responseData" class="col-sm-2 control-label">View</label>
+			    <div class="col-sm-10">
+			    	<textarea class="form-control" rows="3" id="responseData" ng-model="card.view"></textarea>
+			    </div>
+			  </div>
+
+			  <div class="form-group">
+			    <label for="responseData" class="col-sm-2 control-label">Display</label>
+
+			    <div class="col-sm-10" ng-bind-html="card.display">
+
+			    </div>
+			  </div>
+
+		  
+			</form>
+
+			</div>
+	</div>
+</div>

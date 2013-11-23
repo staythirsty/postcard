@@ -1,0 +1,14 @@
+.form-control {
+
+	height: 28px;
+	padding: 6px 6px; 
+	border-radius: 0px;
+	
+}
+
+.form-horizontal .control-label {
+	padding: 4px;
+}
+.form-group {
+	margin-bottom: 7px;
+}
