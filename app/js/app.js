@@ -2,18 +2,24 @@ var postCardApp = angular.module('postCardApp', ['ngSanitize']);
 
 postCardApp.config(['$routeProvider', function($routeProvider) {
 	    
-	    $routeProvider.when('/cards/:cardId/view', {
-	        templateUrl: 'partials/viewCard.html',
-	        controller: 'ViewCardCtrl'
-	      }).when('/cards/:cardId', {
+	    $routeProvider.when('/cards/:cardId', {
 	        templateUrl: 'partials/cards.html'
 	      }).when('/cards', {
 	        templateUrl: 'partials/cards.html',
+	      }).when('/decks/:deckId', {
+	        templateUrl: 'partials/decks.html',
 	      }).otherwise({
 	        redirectTo: '/cards'
 	      });
 
 }]);
+
+postCardApp.directive('navdeck', function() {
+    return {
+      restrict: 'E',
+      templateUrl: 'partials/deckDirective.html'
+    }
+});
 
 
 postCardApp.factory('Decks', function() {
@@ -26,7 +32,7 @@ postCardApp.factory('Decks', function() {
 	deckObj.restore(JSON.parse(deck));
 	decks.push(deckObj);
 
-	Card.counter = _.max(deckObj.cards, function(card){return card.id;}).id;
+	Card.counter = _.max(deckObj.cards, function(card){return card.id;}).id + 1;
 
 	/*
 	for (var j = 0; j < 1; j++){

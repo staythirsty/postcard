@@ -12,10 +12,19 @@ function Card(name, deck){
 	this.response = "";
 	this.view = "<div><p>{{data.id}} - {{data.username}}</p></div><div><img src='{{data.pictureUrl}}'/></div>";
 	this.display = "";
-	this.headers = [{"key": "Content-Type","value" : "application/json"},{"key":"authToken","value":"b24cc8a6-4c5e-4039-99bb-d456be456a8b"}];
+
+	this.headers = [];
+
+	deckHeaders = this.headers;
+
+	_.each(deck.headers, function(header){
+		deckHeaders.push(_.extend(Card.NEW_HEADER, header));
+	});
+
 }
 
 Card.counter = 0;
+Card.NEW_HEADER = {'fromDeck': true, 'linked' : true, 'include' : true};
 
 Card.prototype.restore = function(jsonObj){
 
@@ -79,6 +88,18 @@ Card.prototype.submit = function($http){
 	});
 }
 
+Card.prototype.toggleLink = function (key){
+	
+	var currHeader = _.find(this.headers, function(header){ return header.key == key});
+
+	currHeader.linked = !currHeader.linked;
+
+	if(currHeader.linked){
+		var currDeckHeader = _.find(this.deck.headers, function(header){ return header.key == key});
+		currHeader.value = currDeckHeader.value;
+	}
+}
+
 
 
 
@@ -88,19 +109,56 @@ function Deck(name){
 	
 	this.id = Deck.counter++;
 	this.name = name;
-	this.description = "Description of " + name;
-	this.baseURL = "https://leap.haygroup.com:7150/v1/users/10";
+	this.properties = [{"key": "base-url","value" : "https://leap.haygroup.com:7150/v1/users/10"}];
 	this.headers = [{"key": "Content-Type","value" : "application/json"},{"key":"authToken","value":"b24cc8a6-4c5e-4039-99bb-d456be456a8b"}];
 	this.cards = [];
 }
 
 Deck.counter = 0;
+Deck.NEW_HEADER = {'key':'','value':''};
+
 
 Deck.prototype.add = function(name){
 	var card = new Card(name, this);
 	this.cards.push(card);
 	return card;
 }
+
+Deck.prototype.removeHeader = function (key){
+
+	var currItem = _.findWhere(this.headers, {"key" : key});
+	this.headers = _.without(this.headers, currItem);
+
+
+
+}
+
+Deck.prototype.addHeader = function (){
+
+	var newHeader = _.extend(Deck.NEW_HEADER, {});
+	this.headers.push(newHeader);
+
+	_.each(this.cards, function(card){
+
+		card.headers.push(_.extend(Card.NEW_HEADER, newHeader));
+
+	});
+
+}
+
+
+Deck.prototype.removeProperty = function (key){
+
+	var currItem = _.findWhere(this.properties, {"key" : key});
+	this.properties = _.without(this.properties, currItem);
+
+
+}
+
+Deck.prototype.addProperty = function (){
+	this.properties.push({"key":"","value":""});
+}
+
 
 Deck.prototype.restore = function(jsonObj){
 

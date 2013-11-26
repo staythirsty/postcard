@@ -17,6 +17,29 @@ function DecksCtrl($scope, Decks){
 
 }
 
+function DeckCtrl($scope,  $routeParams, Decks){
+
+	$scope.deck = _.find(Decks.getDecks(), function(deck){ return deck.id == $routeParams.deckId});
+
+	$scope.save = function(){
+		Decks.saveDecks();
+	}
+	$scope.removeHeader = function(key){
+		$scope.deck.removeHeader(key);
+	}
+	$scope.addHeader = function(){
+		$scope.deck.addHeader();
+	}
+
+	$scope.removeProperty = function(key){
+		$scope.deck.removeProperty(key);
+	}
+	$scope.addProperty = function(){
+		$scope.deck.addProperty();
+	}
+
+}
+
 
 function CardCtrl($scope, $http, $compile, $routeParams, Decks){
 
@@ -39,6 +62,11 @@ function CardCtrl($scope, $http, $compile, $routeParams, Decks){
 	$scope.addHeader = function(){
 		$scope.card.addHeader();
 	}
+
+	$scope.toggleLink = function(key){
+		$scope.card.toggleLink(key);
+	}
+
 	$scope.refreshView = function(){
 
 		var template = Handlebars.compile($scope.card.view);

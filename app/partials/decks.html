@@ -1,0 +1,92 @@
+
+
+<div class="row">
+
+	<div class="col-md-3" ng-controller="DecksCtrl">
+		<navdeck></navdeck>
+	</div>
+
+
+	<div class="col-md-9" ng-controller="DeckCtrl">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<b>{{deck.name}}</b>
+			</div>
+			<div class="panel-body">
+  			<form class="form-horizontal" role="form">
+			  <div class="form-group">
+			    <label for="deckName" class="col-sm-2 control-label">Name</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="cardName" placeholder="Name" ng-model="deck.name">
+			    </div>
+			  </div>
+
+
+			  <div class="form-group" >
+			    <label for="requestData" class="col-sm-2 control-label">Properties</label>
+			    <div class="col-sm-10">
+
+			    	<button type="button" class="btn btn-default" ng-hide="deck.properties.length > 0" ng-click="addProperty()">
+			    				<span class="glyphicon glyphicon-plus"></span>
+					</button>
+			    	<div class="row form-group" ng-repeat="property in deck.properties">
+			    		<div class="col-sm-3">
+			    			<input type="text" class="form-control" ng-model="property.key">
+			    		</div>
+			    		<div class="col-sm-7">
+			    			<input type="text" class="form-control" ng-model="property.value">
+			    		</div>
+			    		<div class="col-sm-2">
+							<a ng-click="removeProperty(property.key)">
+								<span class="glyphicon glyphicon-minus-sign"></span>
+							</a>
+							<a ng-click="addProperty()">
+								<span class="glyphicon glyphicon-plus-sign"></span>
+							</a>
+			    		</div>
+			    	</div>
+			    </div>
+			  </div>
+			  
+
+			  <div class="form-group" >
+			    <label for="requestData" class="col-sm-2 control-label">Headers</label>
+			    <div class="col-sm-10">
+
+			    	<button type="button" class="btn btn-default" ng-hide="deck.headers.length > 0" ng-click="addHeader()">
+			    				<span class="glyphicon glyphicon-plus"></span>
+					</button>
+			    	<div class="row form-group" ng-repeat="header in deck.headers">
+			    		<div class="col-sm-3">
+			    			<input type="text" class="form-control" ng-model="header.key">
+			    		</div>
+			    		<div class="col-sm-7">
+			    			<input type="text" class="form-control" ng-model="header.value">
+			    		</div>
+			    		<div class="col-sm-2">
+							<a ng-click="removeHeader(header.key)">
+								<span class="glyphicon glyphicon-minus-sign"></span>
+							</a>
+							<a ng-click="addHeader()">
+								<span class="glyphicon glyphicon-plus-sign"></span>
+							</a>
+			    		</div>
+			    	</div>
+			    </div>
+			  </div>
+
+
+
+
+			  <div class="form-group">
+			    <div class="col-sm-10 col-md-offset-2">
+			    	<button type="button" ng-click="submit()" class="btn btn-primary">Save</button>
+			    	<button type="button" ng-click="cancel()" class="btn btn-warning">Cancel</button>
+			    </div>
+			  </div>
+		  
+			</form>
+
+			</div>
+	</div>
+</div>
