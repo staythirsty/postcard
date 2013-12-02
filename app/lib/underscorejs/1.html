@@ -1,0 +1,302 @@
+
+<!-- saved from url=(0080)file:///Users/naveen_srinivasan/workspaces/navn/postcard/app/index.html#/decks/1 -->
+<html ng-app="postCardApp" class="ng-scope"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+	<script src="./1_files/jquery.min.js"></script>
+	<script type="text/javascript" src="./1_files/card.js"></script>
+	<script type="text/javascript" src="./1_files/angular.min.js"></script><style type="text/css">@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak{display:none !important;}ng\:form{display:block;}</style>
+	<script type="text/javascript" src="./1_files/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="./1_files/app.js"></script>
+	<script type="text/javascript" src="./1_files/controllers.js"></script>
+	<script type="text/javascript" src="./1_files/bootstrap.min.js"></script>
+	<script type="text/javascript" src="./1_files/handlebars-v1.1.2.js"></script>
+	<script type="text/javascript" src="./1_files/underscore-min.js"></script>
+
+
+	<link rel="stylesheet" type="text/css" href="./1_files/bootstrap.min.css">
+
+	<link rel="stylesheet" type="text/css" href="./1_files/bootstrap-override.css">
+
+	<link rel="stylesheet" type="text/css" href="./1_files/prettify.css">
+
+	
+</head>
+<body style="">
+
+<div class="container">
+	
+	<div class="row">
+		<div class="col-md-12">
+			<h2>PostCard</h2>
+		</div>
+	</div>
+	<div ng-view="">
+
+<div class="row ng-scope">
+
+	<div class="col-md-3 ng-scope" ng-controller="DecksCtrl">
+		<navdeck><div class="panel-group" id="accordion">
+		<!-- ngRepeat: deck in decks --><div class="panel panel-default ng-scope" ng-repeat="deck in decks">
+		<div class="panel-heading">
+			<h4 class="panel-title">
+				<div class="row" style="padding: 5px 10px;">
+
+					<div class="col-md-6">
+						<a data-toggle="collapse" data-parent="#accordion" href="file:///Users/naveen_srinivasan/workspaces/navn/postcard/app/index.html#collapse1" class="ng-binding">
+				          My Deck
+				        </a>
+					</div>
+
+					<div class="col-md-2">
+						<a href="./1_files/1.html">
+							<span class="glyphicon glyphicon-wrench"></span>
+						</a>
+					</div>
+
+					<div class="col-md-2">
+						<a ng-click="save()">
+							<span class="glyphicon glyphicon-floppy-save"></span>
+						</a>
+					</div>
+					<div class="col-md-2">
+						<a ng-click="addCard()">
+							<span class="glyphicon glyphicon-plus-sign"></span>
+						</a>
+					</div>
+				</div>
+			</h4>
+		</div>
+	    <div id="collapse1" class="panel-collapse collapse in">
+	      	<div class="panel-body">
+
+
+	      		<!-- ngRepeat: card in deck.cards --><div class="row ng-scope" style="padding: 5px 10px;" ng-repeat="card in deck.cards">
+	      			<div class="col-md-3">
+	      				<span class="badge ng-binding">GET</span>
+	      			</div>
+	      			<div class="col-md-7">
+	      				<a href="file:///Users/naveen_srinivasan/workspaces/navn/postcard/app/index.html#/cards/0" class="pull-left ng-binding"> User Profile</a>
+	      			</div>
+					<div class="col-md-2">
+							<a ng-click="removeCard(card.id);">
+								<span class="glyphicon glyphicon-minus-sign"></span>
+							</a>
+					</div>
+	      		</div><div class="row ng-scope" style="padding: 5px 10px;" ng-repeat="card in deck.cards">
+	      			<div class="col-md-3">
+	      				<span class="badge ng-binding">GET</span>
+	      			</div>
+	      			<div class="col-md-7">
+	      				<a href="file:///Users/naveen_srinivasan/workspaces/navn/postcard/app/index.html#/cards/3" class="pull-left ng-binding"> Ref - Climates</a>
+	      			</div>
+					<div class="col-md-2">
+							<a ng-click="removeCard(card.id);">
+								<span class="glyphicon glyphicon-minus-sign"></span>
+							</a>
+					</div>
+	      		</div><div class="row ng-scope" style="padding: 5px 10px;" ng-repeat="card in deck.cards">
+	      			<div class="col-md-3">
+	      				<span class="badge ng-binding">POST</span>
+	      			</div>
+	      			<div class="col-md-7">
+	      				<a href="file:///Users/naveen_srinivasan/workspaces/navn/postcard/app/index.html#/cards/4" class="pull-left ng-binding"> Login</a>
+	      			</div>
+					<div class="col-md-2">
+							<a ng-click="removeCard(card.id);">
+								<span class="glyphicon glyphicon-minus-sign"></span>
+							</a>
+					</div>
+	      		</div><div class="row ng-scope" style="padding: 5px 10px;" ng-repeat="card in deck.cards">
+	      			<div class="col-md-3">
+	      				<span class="badge ng-binding">GET</span>
+	      			</div>
+	      			<div class="col-md-7">
+	      				<a href="file:///Users/naveen_srinivasan/workspaces/navn/postcard/app/index.html#/cards/5" class="pull-left ng-binding"> Fourth Card</a>
+	      			</div>
+					<div class="col-md-2">
+							<a ng-click="removeCard(card.id);">
+								<span class="glyphicon glyphicon-minus-sign"></span>
+							</a>
+					</div>
+	      		</div><div class="row ng-scope" style="padding: 5px 10px;" ng-repeat="card in deck.cards">
+	      			<div class="col-md-3">
+	      				<span class="badge ng-binding">GET</span>
+	      			</div>
+	      			<div class="col-md-7">
+	      				<a href="file:///Users/naveen_srinivasan/workspaces/navn/postcard/app/index.html#/cards/6" class="pull-left ng-binding"> Reference Family</a>
+	      			</div>
+					<div class="col-md-2">
+							<a ng-click="removeCard(card.id);">
+								<span class="glyphicon glyphicon-minus-sign"></span>
+							</a>
+					</div>
+	      		</div><div class="row ng-scope" style="padding: 5px 10px;" ng-repeat="card in deck.cards">
+	      			<div class="col-md-3">
+	      				<span class="badge ng-binding">GET</span>
+	      			</div>
+	      			<div class="col-md-7">
+	      				<a href="file:///Users/naveen_srinivasan/workspaces/navn/postcard/app/index.html#/cards/9" class="pull-left ng-binding"> Test Linked</a>
+	      			</div>
+					<div class="col-md-2">
+							<a ng-click="removeCard(card.id);">
+								<span class="glyphicon glyphicon-minus-sign"></span>
+							</a>
+					</div>
+	      		</div>
+
+			</div>
+	    </div>
+		</div>
+</div></navdeck>
+	</div>
+
+
+	<div class="col-md-9 ng-scope" ng-controller="DeckCtrl">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<b class="ng-binding">My Deck</b>
+			</div>
+			<div class="panel-body">
+  			<form class="form-horizontal ng-valid ng-dirty" role="form">
+			  <div class="form-group">
+			    <label for="deckName" class="col-sm-2 control-label">Name</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control ng-pristine ng-valid" id="cardName" placeholder="Name" ng-model="deck.name">
+			    </div>
+			  </div>
+
+
+			  <div class="form-group">
+			    <label class="col-sm-2 control-label">Properties</label>
+			    <div class="col-sm-10">
+
+			    	<button type="button" class="btn btn-default" ng-hide="deck.properties.length &gt; 0" ng-click="addItem(&#39;PROPERTY&#39;)" style="display: none;">
+			    				<span class="glyphicon glyphicon-plus"></span>
+					</button>
+
+					
+					<!-- ngRepeat: property in deck.properties --><div class="row form-group ng-scope" ng-repeat="property in deck.properties">
+
+			    		<div class="col-md-3">
+			    			<input ng-hide="editmode.mode == &#39;PROPERTY&#39; &amp;&amp; editmode.prevkey == property.key" type="text" class="form-control" value="base-url" disabled="">
+			    			<input ng-show="editmode.mode == &#39;PROPERTY&#39; &amp;&amp; editmode.prevkey == property.key" type="text" class="form-control ng-pristine ng-valid" ng-model="editmode.key" style="display: none;">
+		    			</div>
+		    			<div class="col-md-7">
+			    			<input ng-hide="editmode.mode == &#39;PROPERTY&#39; &amp;&amp; editmode.prevkey == property.key" type="text" class="form-control" value="https://leap.haygroup.com:7150/v1/users/10" disabled="">
+			    			<input ng-show="editmode.mode == &#39;PROPERTY&#39; &amp;&amp; editmode.prevkey == property.key" type="text" class="form-control ng-pristine ng-valid" ng-model="editmode.value" style="display: none;">
+		    			</div>
+		    			<div class="col-md-2 header-control">
+							<a ng-hide="editmode.mode == &#39;PROPERTY&#39; &amp;&amp; editmode.prevkey == property.key" ng-click="removeItem(property.key,&#39;PROPERTY&#39;)">
+								<span class="glyphicon glyphicon-minus-sign"></span>
+							</a>
+							<a ng-hide="editmode.mode == &#39;PROPERTY&#39; &amp;&amp; editmode.prevkey == property.key" ng-click="addItem(&#39;PROPERTY&#39;)">
+								<span class="glyphicon glyphicon-plus-sign"></span>
+							</a>
+							<a ng-show="editmode.mode == &#39;PROPERTY&#39; &amp;&amp; editmode.prevkey == property.key" ng-click="saveItem(&#39;PROPERTY&#39;)" style="display: none;">
+								<span class="glyphicon glyphicon-floppy-disk"></span>
+							</a>
+							<a ng-hide="editmode.mode == &#39;PROPERTY&#39; &amp;&amp; editmode.prevkey == property.key" ng-click="editItem(property.key,&#39;PROPERTY&#39;)">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a>
+							<a ng-show="editmode.mode == &#39;PROPERTY&#39; &amp;&amp; editmode.prevkey == property.key" ng-click="cancelEditItem()" style="display: none;">
+								<span class="glyphicon glyphicon-floppy-remove"></span>
+							</a>
+		    			</div>
+
+			    	</div>
+
+			    </div>
+			  </div>
+
+
+			  <div class="form-group">
+			    <label for="requestData" class="col-sm-2 control-label">Headers</label>
+			    <div class="col-sm-10">
+
+			    	<button type="button" class="btn btn-default" ng-hide="deck.headers.length &gt; 0" ng-click="addItem(&#39;HEADER&#39;)" style="display: none;">
+			    				<span class="glyphicon glyphicon-plus"></span>
+					</button>
+
+			    	<!-- ngRepeat: header in deck.headers --><div class="row form-group ng-scope" ng-repeat="header in deck.headers">
+
+			    		<div class="col-md-3">
+			    			<input ng-hide="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" type="text" class="form-control" value="Content-Type" disabled="">
+			    			<input ng-show="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" type="text" class="form-control ng-pristine ng-valid" ng-model="editmode.key" style="display: none;">
+		    			</div>
+		    			<div class="col-md-7">
+			    			<input ng-hide="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" type="text" class="form-control" value="application/json" disabled="">
+			    			<input ng-show="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" type="text" class="form-control ng-pristine ng-valid" ng-model="editmode.value" style="display: none;">
+		    			</div>
+		    			<div class="col-md-2 header-control">
+							<a ng-hide="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" ng-click="removeItem(header.key,&#39;HEADER&#39;)">
+								<span class="glyphicon glyphicon-minus-sign"></span>
+							</a>
+							<a ng-hide="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" ng-click="addItem(&#39;HEADER&#39;)">
+								<span class="glyphicon glyphicon-plus-sign"></span>
+							</a>
+							<a ng-show="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" ng-click="saveItem(&#39;HEADER&#39;)" style="display: none;">
+								<span class="glyphicon glyphicon-floppy-disk"></span>
+							</a>
+							<a ng-hide="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" ng-click="editItem(header.key,&#39;HEADER&#39;)">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a>
+							<a ng-show="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" ng-click="cancelEditItem()" style="display: none;">
+								<span class="glyphicon glyphicon-floppy-remove"></span>
+							</a>
+		    			</div>
+
+			    	</div><div class="row form-group ng-scope" ng-repeat="header in deck.headers">
+
+			    		<div class="col-md-3">
+			    			<input ng-hide="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" type="text" class="form-control" value="authToken" disabled="">
+			    			<input ng-show="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" type="text" class="form-control ng-pristine ng-valid" ng-model="editmode.key" style="display: none;">
+		    			</div>
+		    			<div class="col-md-7">
+			    			<input ng-hide="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" type="text" class="form-control" value="b24cc8a6-4c5e-4039-99bb-d456be456a8b" disabled="">
+			    			<input ng-show="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" type="text" class="form-control ng-pristine ng-valid" ng-model="editmode.value" style="display: none;">
+		    			</div>
+		    			<div class="col-md-2 header-control">
+							<a ng-hide="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" ng-click="removeItem(header.key,&#39;HEADER&#39;)">
+								<span class="glyphicon glyphicon-minus-sign"></span>
+							</a>
+							<a ng-hide="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" ng-click="addItem(&#39;HEADER&#39;)">
+								<span class="glyphicon glyphicon-plus-sign"></span>
+							</a>
+							<a ng-show="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" ng-click="saveItem(&#39;HEADER&#39;)" style="display: none;">
+								<span class="glyphicon glyphicon-floppy-disk"></span>
+							</a>
+							<a ng-hide="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" ng-click="editItem(header.key,&#39;HEADER&#39;)">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a>
+							<a ng-show="editmode.mode == &#39;HEADER&#39; &amp;&amp; editmode.prevkey == header.key" ng-click="cancelEditItem()" style="display: none;">
+								<span class="glyphicon glyphicon-floppy-remove"></span>
+							</a>
+		    			</div>
+
+			    	</div>
+			    </div>
+			  </div>
+
+
+
+			  <!--
+			  <div class="form-group">
+			    <div class="col-sm-10 col-md-offset-2">
+			    	<button type="button" ng-click="submit()" class="btn btn-primary">Save</button>
+			    	<button type="button" ng-click="cancel()" class="btn btn-warning">Cancel</button>
+			    </div>
+			  </div>
+				-->
+
+		  
+			</form>
+
+			</div>
+	</div>
+</div></div></div>
+
+<div>
+
+
+
+</div></div></body></html>

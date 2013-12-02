@@ -10,7 +10,7 @@
 	<div class="col-md-9" ng-controller="CardCtrl">
 		<div class="panel panel-primary">
 			<div class="panel-heading">
-				<b>{{card.name}}</b>
+				<b>{{card.deck.name}} / {{card.name}}</b>
 			</div>
 			<div class="panel-body">
   			<form class="form-horizontal" role="form">
@@ -47,10 +47,6 @@
 			    <label for="requestData" class="col-sm-2 control-label">Headers</label>
 			    <div class="col-sm-10">
 
-			    	<button type="button" class="btn btn-default" ng-hide="card.headers.length > 0" ng-click="addHeader()">
-			    				<span class="glyphicon glyphicon-plus"></span>
-					</button>
-
 			    	<div class="row form-group" ng-repeat="header in card.headers">
 			    		<div class="col-sm-3">
 			    			<input type="text" class="form-control" ng-model="header.key" ng-disabled="header.fromDeck">
@@ -60,11 +56,8 @@
 			    		</div>
 			    		<div class="col-sm-2">
 
-							<a ng-click="removeHeader(header.key)">
+							<a ng-hide="header.fromDeck" ng-click="removeHeader(header.key)">
 								<span class="glyphicon glyphicon-minus-sign"></span>
-							</a>
-							<a ng-click="addHeader()">
-								<span class="glyphicon glyphicon-plus-sign"></span>
 							</a>
 
 							<a ng-show="header.fromDeck" ng-click="toggleLink(header.key)">
@@ -73,6 +66,68 @@
 
 							<a ng-show="header.fromDeck" ng-click="header.include = !header.include">
 								<span ng-class="{'text-success' : header.include , 'text-danger' : !header.include}" class="glyphicon glyphicon-send"/>
+							</a>
+
+			    		</div>
+			    	</div>
+
+			    	<div class="row form-group">
+			    		<div class="col-sm-3">
+			    			<input type="text" class="form-control" ng-model="addmode.key" >
+			    		</div>
+			    		<div class="col-sm-7">
+			    			<input type="text" class="form-control" ng-model="addmode.value">
+			    		</div>
+			    		<div class="col-sm-2">
+
+							<a  ng-click="addHeader()">
+								<span class="glyphicon glyphicon-plus-sign"></span>
+							</a>
+
+			    		</div>
+			    	</div>
+
+			    </div>
+			  </div>
+
+
+			<div class="form-group" >
+			    <label for="requestData" class="col-sm-2 control-label">Wirings</label>
+			    <div class="col-sm-10">
+
+			    	<div class="row form-group" ng-repeat="wiring in card.wirings">
+			    		<div class="col-sm-3">
+			    			<input type="text" class="form-control" ng-model="wiring.property">
+			    		</div>
+			    		<div class="col-sm-3">
+			    			<input type="text" class="form-control" ng-model="wiring.map" >
+			    		</div>
+			    		<div class="col-sm-4">
+			    			<input type="text" class="form-control" ng-model="wiring.value" disabled>
+			    		</div>
+			    		<div class="col-sm-2">
+
+							<a ng-click="removeWiring(wiring.property)">
+								<span class="glyphicon glyphicon-minus-sign"></span>
+							</a>
+
+			    		</div>
+			    	</div>
+
+			    	<div class="row form-group">
+			    		<div class="col-sm-3">
+			    			<select ng-model="addmode.property" ng-options="property.key for property in card.deck.properties"></select>
+			    			<input type="text" class="form-control" ng-model="addmode.property" >
+			    		</div>
+			    		<div class="col-sm-3">
+			    			<input type="text" class="form-control" ng-model="addmode.map">
+			    		</div>
+			    		<div class="col-sm-4">
+			    		</div>
+			    		<div class="col-sm-2">
+
+							<a  ng-click="addWiring()">
+								<span class="glyphicon glyphicon-plus-sign"></span>
 							</a>
 
 			    		</div>
@@ -90,8 +145,8 @@
 			  </div>
 			  <div class="form-group">
 			    <div class="col-sm-10 col-md-offset-2">
-			    	<button type="button" ng-click="submit()" class="btn btn-primary">Submit</button>
-			    	<button type="button" ng-click="reset()" class="btn btn-warning">Reset</button>
+			    	<button type="button" ng-click="submit()" class="btn btn-primary"><span class="glyphicon glyphicon-play"/> Submit</button>
+			    	<button type="button" ng-click="reset()" class="btn btn-warning"><span class="glyphicon glyphicon-retweet"/> Reset</button>
 			    	<button type="button" ng-click="refreshView()" class="btn btn-warning">View</button>
 			    </div>
 			  </div>
@@ -99,25 +154,9 @@
 			  <div class="form-group">
 			    <label for="responseData" class="col-sm-2 control-label">Response</label>
 			    <div class="col-sm-10">
-			    	<textarea class="form-control" rows="3" id="response" ng-model="card.response"></textarea>
+			    	<textarea class="form-control" rows="10" id="response" ng-model="card.response"></textarea>
 			    </div>
 			  </div>
-
-			  <div class="form-group">
-			    <label for="responseData" class="col-sm-2 control-label">View</label>
-			    <div class="col-sm-10">
-			    	<textarea class="form-control" rows="3" id="responseData" ng-model="card.view"></textarea>
-			    </div>
-			  </div>
-
-			  <div class="form-group">
-			    <label for="responseData" class="col-sm-2 control-label">Display</label>
-
-			    <div class="col-sm-10" ng-bind-html="card.display">
-
-			    </div>
-			  </div>
-
 		  
 			</form>
 

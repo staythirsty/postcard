@@ -2,7 +2,9 @@ var postCardApp = angular.module('postCardApp', ['ngSanitize']);
 
 postCardApp.config(['$routeProvider', function($routeProvider) {
 	    
-	    $routeProvider.when('/cards/:cardId', {
+	    $routeProvider.when('/decks/:deckId/cards/:cardId', {
+	        templateUrl: 'partials/cards.html'
+	      }).when('/decks/:deckId/cards/:cardId/:opId', {
 	        templateUrl: 'partials/cards.html'
 	      }).when('/cards', {
 	        templateUrl: 'partials/cards.html',
@@ -22,53 +24,69 @@ postCardApp.directive('navdeck', function() {
 });
 
 
-postCardApp.factory('Decks', function() {
+postCardApp.factory('PostCardSvc', function() {
 
 	var decks = [];
 
-	var deck = localStorage.getItem("deck");
-	var deckObj = new Deck();
+	var state = {};
 
-	deckObj.restore(JSON.parse(deck));
-	decks.push(deckObj);
+	var jsonDeckArray = JSON.parse(localStorage.getItem("decks"));
 
-	Card.counter = _.max(deckObj.cards, function(card){return card.id;}).id + 1;
+	if(jsonDeckArray == undefined || jsonDeckArray == null){
+		decks.push(new Deck("My Deck"));
+	}else{
+		_.each(jsonDeckArray,function(jsonDeck){
+			var deckObj = new Deck();
+			deckObj.restore(jsonDeck);
+			decks.push(deckObj);		
+		});
+	}
+
+	Deck.counter = _.max(decks, function(deck){return deck.id;}).id + 1;
+
+	var tempArray  = [];
+
+	_.each(decks,function(deck){
+			var cardCounter = 0;
+			if(_.isArray(deck.cards) && deck.cards.length > 0){
+				cardCounter = _.max(deck.cards, function(card){return card.id;}).id;
+				console.log("cardCounter" + cardCounter);
+			}
+			tempArray.push(cardCounter);
+	});
+
+	Card.counter = _.max(tempArray) + 1;
 
 	/*
-	for (var j = 0; j < 1; j++){
-		decks.push(new Deck("Deck #" + j));
-		for (var i = 0; i < 5 ; i++) {
-			decks[j].add("Card #" + i);
-		}
-	}
-	//*/
+	if(_.isArray(deckObj.cards) && deckObj.cards > 0)
+		Card.counter = _.max(deckObj.cards, function(card){return card.id;}).id + 1;
+	else
+		Card.counter = 0;
+	*/
+
+	console.log("Deck.counter" + Deck.counter);
+	console.log("Card.counter" + Card.counter);
+
 
   return {
 
 	  	getDecks: function () {
 	    	return decks;                   
 		},
-
 		saveDecks: function() {
-
-			localStorage.setItem("deck", decks[0].json());
-			console.log(localStorage.getItem("deck"));
+			var saveObj = "[";
+			_.each(decks,function(deck){ saveObj += deck.json() + "," ; });
+			saveObj = saveObj.substring(0, saveObj.length - 1);
+			saveObj += "]";
+			console.log(saveObj);
+			localStorage.setItem("decks", saveObj);
+			console.log(localStorage.getItem("decks"));
 		},
-		addCard: function() {
-
-			var newCard = new Card("New Card", decks[0]);
-			decks[0].cards.push(newCard);
-		
+		getState: function(attr){
+			return state[attr];
 		},
-		removeCard: function(cardId) {
-
-			for (var i = 0; i < decks[0].cards.length; i++) {
-				if(decks[0].cards[i].id == cardId){
-					decks[0].cards.splice(i, 1);
-					break;
-				}
-			}
-		
+		putState : function(attr, value){
+			state[attr] = value;
 		}
 
 
