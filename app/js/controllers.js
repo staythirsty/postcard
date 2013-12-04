@@ -138,7 +138,7 @@ function CardCtrl($scope, $http, $compile, $routeParams, PostCardSvc){
 	}
 
 	$scope.reset = function(){
-		$scope.card.responseData = null;
+		$scope.card.reset();
 	}
 
 	$scope.removeHeader = function(key){
@@ -165,11 +165,9 @@ function CardCtrl($scope, $http, $compile, $routeParams, PostCardSvc){
 	}
 
 	$scope.refreshView = function(){
-
 		var template = Handlebars.compile($scope.card.view);
 		console.log($scope.card.responseData);
 		$scope.card.display = template($scope.card.responseData);
-
 	}
 
 }

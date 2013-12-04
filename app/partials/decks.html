@@ -28,11 +28,11 @@
 					
 					<div class="row form-group" ng-repeat="property in deck.properties">
 
-			    		<div class="col-md-3">
+			    		<div class="col-md-4">
 			    			<input ng-hide="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" type="text" class="form-control" value="{{property.key}}" disabled>
 			    			<input ng-show="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" type="text" class="form-control" ng-model="editmode.key">
 		    			</div>
-		    			<div class="col-md-7">
+		    			<div class="col-md-6">
 			    			<input ng-hide="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" type="text" class="form-control" value="{{property.value}}" disabled>
 			    			<input ng-show="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" type="text" class="form-control" ng-model="editmode.value">
 		    			</div>
@@ -54,10 +54,10 @@
 			    	</div>
 
 					<div class="row form-group">
-			    		<div class="col-md-3">
+			    		<div class="col-md-4">
 			    			<input type="text" class="form-control" ng-model="propertyaddmode.key">
 		    			</div>
-		    			<div class="col-md-7">
+		    			<div class="col-md-6">
 			    			<input type="text" class="form-control" ng-model="propertyaddmode.value">
 		    			</div>
 		    			<div class="col-md-2 header-control">
@@ -77,11 +77,11 @@
 
 			    	<div class="row form-group" ng-repeat="header in deck.headers">
 
-			    		<div class="col-md-3">
+			    		<div class="col-md-4">
 			    			<input ng-hide="editmode.mode == 'HEADER' && editmode.prevkey == header.key" type="text" class="form-control" value="{{header.key}}" disabled>
 			    			<input ng-show="editmode.mode == 'HEADER' && editmode.prevkey == header.key" type="text" class="form-control" ng-model="editmode.key">
 		    			</div>
-		    			<div class="col-md-7">
+		    			<div class="col-md-6">
 			    			<input ng-hide="editmode.mode == 'HEADER' && editmode.prevkey == header.key" type="text" class="form-control" value="{{header.value}}" disabled>
 			    			<input ng-show="editmode.mode == 'HEADER' && editmode.prevkey == header.key" type="text" class="form-control" ng-model="editmode.value">
 		    			</div>
@@ -102,10 +102,10 @@
 
 			    	</div>
 					<div class="row form-group">
-			    		<div class="col-md-3">
+			    		<div class="col-md-4">
 			    			<input type="text" class="form-control" ng-model="headeraddmode.key">
 		    			</div>
-		    			<div class="col-md-7">
+		    			<div class="col-md-6">
 			    			<input type="text" class="form-control" ng-model="headeraddmode.value">
 		    			</div>
 		    			<div class="col-md-2 header-control">

@@ -139,8 +139,24 @@ Card.prototype.removeWiring = function (property, map){
 
 }
 
+Card.prototype.reset = function(){
+
+	this.responseData = null;
+	this.response = null;
+
+	_.each(this.wirings, function(wiring){
+		wiring.value = "";
+	});
+
+
+}
 
 Card.prototype.submit = function($http){
+
+
+	_.each(this.wirings, function(wiring){
+		wiring.value = "";
+	});
 
 	var thisCard = this;
 	var httpConfig = {};
@@ -156,7 +172,15 @@ Card.prototype.submit = function($http){
 	});
 
 	if(httpConfig.method == 'POST' || httpConfig.method == "PUT"){
+		
+
 		httpConfig.data = this.requestData;
+		
+		_.each(thisCard.deck.properties, function (property){
+			var regEx = new RegExp('{{' + property.key + '}}','g');
+			httpConfig.data = httpConfig.data.replace(regEx, property.value);
+		});
+
 	}
 
 
