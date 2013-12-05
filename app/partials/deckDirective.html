@@ -1,0 +1,64 @@
+
+<div class="panel-group">
+		<div class="panel panel-default" style="overflow:inherit">
+		<div class="panel-heading">
+			<h4 class="panel-title">
+				<div class="row" style="padding: 5px 0px;">
+
+					<div class="col-md-7">
+
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="caret" style="font-size:20px"></span> {{selectedDeck.name}} </a>
+				        <ul class="dropdown-menu" style="overflow:visible;">
+							<li><a ng-click="addDeck()">New Deck </a></li>
+							<li class="divider"></li>
+							 <li ng-repeat="deck in decks"><a ng-click="selectDeck(deck)">{{deck.name}}</a></li>
+				        </ul>
+
+					</div>
+
+					<div class="col-md-1">
+						<a href="#/decks/{{selectedDeck.id}}">
+							<span class="glyphicon glyphicon-wrench"></span>
+						</a>
+					</div>
+
+					<div class="col-md-1">
+						<a ng-click="save()">
+							<span class="glyphicon glyphicon-floppy-save"></span>
+						</a>
+					</div>
+					<div class="col-md-1">
+						<a ng-click="addCard(selectedDeck.id)">
+							<span class="glyphicon glyphicon-plus-sign"></span>
+						</a>
+					</div>
+				</div>
+			</h4>
+		</div>
+	    <div id="collapse{{selectedDeck.id}}" class="panel-collapse collapse in">
+	      	<div class="panel-body">
+
+
+	      		<div class="row" style="padding: 5px 0px;" ng-repeat="card in selectedDeck.cards">
+	      			<div class="col-md-3">
+	      				<span class="badge">{{card.httpMethod}}</span>
+	      			</div>
+	      			<div class="col-md-6">
+	      				<a href="#/decks/{{selectedDeck.id}}/cards/{{card.id}}" class="pull-left"> {{card.name}}</a>
+	      			</div>
+					<div class="col-md-1">
+							<a href="#/decks/{{selectedDeck.id}}/cards/{{card.id}}/1">
+								<span class="glyphicon glyphicon-play"></span>
+							</a>
+	      			</div>
+					<div class="col-md-1">
+							<a ng-click="removeCard(selectedDeck.id, card.id);">
+								<span class="glyphicon glyphicon-minus-sign"></span>
+							</a>
+					</div>
+	      		</div>
+
+			</div>
+	    </div>
+		</div>
+</div>
