@@ -22,68 +22,103 @@
 			  </div>
 
 
-			  <div class="form-group" >
-			    <label for="requestData" class="col-sm-2 control-label">Properties</label>
+			  <div class="form-group">
+			    <label class="col-sm-2 control-label">Properties</label>
 			    <div class="col-sm-10">
+					
+					<div class="row form-group" ng-repeat="property in deck.properties">
 
-			    	<button type="button" class="btn btn-default" ng-hide="deck.properties.length > 0" ng-click="addProperty()">
-			    				<span class="glyphicon glyphicon-plus"></span>
-					</button>
-			    	<div class="row form-group" ng-repeat="property in deck.properties">
-			    		<div class="col-sm-3">
-			    			<input type="text" class="form-control" ng-model="property.key">
-			    		</div>
-			    		<div class="col-sm-7">
-			    			<input type="text" class="form-control" ng-model="property.value">
-			    		</div>
-			    		<div class="col-sm-2">
-							<a ng-click="removeProperty(property.key)">
+			    		<div class="col-md-4">
+			    			<input ng-hide="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" type="text" class="form-control" value="{{property.key}}" disabled>
+			    			<input ng-show="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" type="text" class="form-control" ng-model="editmode.key">
+		    			</div>
+		    			<div class="col-md-6">
+			    			<input ng-hide="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" type="text" class="form-control" value="{{property.value}}" disabled>
+			    			<input ng-show="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" type="text" class="form-control" ng-model="editmode.value">
+		    			</div>
+		    			<div class="col-md-2 header-control">
+							<a ng-hide="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" ng-click="removeItem(property.key,'PROPERTY')">
 								<span class="glyphicon glyphicon-minus-sign"></span>
 							</a>
-							<a ng-click="addProperty()">
+							<a ng-show="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" ng-click="saveItem('PROPERTY')">
+								<span class="glyphicon glyphicon-floppy-disk"></span>
+							</a>
+							<a ng-hide="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" ng-click="editItem(property.key,'PROPERTY')">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a>
+							<a ng-show="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" ng-click="cancelEditItem()">
+								<span class="glyphicon glyphicon-floppy-remove"></span>
+							</a>
+		    			</div>
+
+			    	</div>
+
+					<div class="row form-group">
+			    		<div class="col-md-4">
+			    			<input type="text" class="form-control" ng-model="propertyaddmode.key">
+		    			</div>
+		    			<div class="col-md-6">
+			    			<input type="text" class="form-control" ng-model="propertyaddmode.value">
+		    			</div>
+		    			<div class="col-md-2 header-control">
+							<a  ng-click="addItem('PROPERTY')">
 								<span class="glyphicon glyphicon-plus-sign"></span>
 							</a>
-			    		</div>
+		    			</div>
 			    	</div>
+
 			    </div>
 			  </div>
-			  
+
 
 			  <div class="form-group" >
 			    <label for="requestData" class="col-sm-2 control-label">Headers</label>
 			    <div class="col-sm-10">
 
-			    	<button type="button" class="btn btn-default" ng-hide="deck.headers.length > 0" ng-click="addHeader()">
-			    				<span class="glyphicon glyphicon-plus"></span>
-					</button>
 			    	<div class="row form-group" ng-repeat="header in deck.headers">
-			    		<div class="col-sm-3">
-			    			<input type="text" class="form-control" ng-model="header.key">
-			    		</div>
-			    		<div class="col-sm-7">
-			    			<input type="text" class="form-control" ng-model="header.value">
-			    		</div>
-			    		<div class="col-sm-2">
-							<a ng-click="removeHeader(header.key)">
+
+			    		<div class="col-md-4">
+			    			<input ng-hide="editmode.mode == 'HEADER' && editmode.prevkey == header.key" type="text" class="form-control" value="{{header.key}}" disabled>
+			    			<input ng-show="editmode.mode == 'HEADER' && editmode.prevkey == header.key" type="text" class="form-control" ng-model="editmode.key">
+		    			</div>
+		    			<div class="col-md-6">
+			    			<input ng-hide="editmode.mode == 'HEADER' && editmode.prevkey == header.key" type="text" class="form-control" value="{{header.value}}" disabled>
+			    			<input ng-show="editmode.mode == 'HEADER' && editmode.prevkey == header.key" type="text" class="form-control" ng-model="editmode.value">
+		    			</div>
+		    			<div class="col-md-2 header-control">
+							<a ng-hide="editmode.mode == 'HEADER' && editmode.prevkey == header.key" ng-click="removeItem(header.key,'HEADER')">
 								<span class="glyphicon glyphicon-minus-sign"></span>
 							</a>
-							<a ng-click="addHeader()">
+							<a ng-show="editmode.mode == 'HEADER' && editmode.prevkey == header.key" ng-click="saveItem('HEADER')">
+								<span class="glyphicon glyphicon-floppy-disk"></span>
+							</a>
+							<a ng-hide="editmode.mode == 'HEADER' && editmode.prevkey == header.key" ng-click="editItem(header.key,'HEADER')">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a>
+							<a ng-show="editmode.mode == 'HEADER' && editmode.prevkey == header.key" ng-click="cancelEditItem()">
+								<span class="glyphicon glyphicon-floppy-remove"></span>
+							</a>
+		    			</div>
+
+			    	</div>
+					<div class="row form-group">
+			    		<div class="col-md-4">
+			    			<input type="text" class="form-control" ng-model="headeraddmode.key">
+		    			</div>
+		    			<div class="col-md-6">
+			    			<input type="text" class="form-control" ng-model="headeraddmode.value">
+		    			</div>
+		    			<div class="col-md-2 header-control">
+							<a  ng-click="addItem('HEADER')">
 								<span class="glyphicon glyphicon-plus-sign"></span>
 							</a>
-			    		</div>
-			    	</div>
+		    			</div>
+		    		</div>
+
 			    </div>
 			  </div>
 
 
-
-
-			  <div class="form-group">
-			    <div class="col-sm-10 col-md-offset-2">
-			    	<button type="button" ng-click="submit()" class="btn btn-primary">Save</button>
-			    	<button type="button" ng-click="cancel()" class="btn btn-warning">Cancel</button>
-			    </div>
-			  </div>
 		  
 			</form>
 
