@@ -1,16 +1,9 @@
 
-function DecksCtrl($scope, PostCardSvc){
+function DecksCtrl($scope, $route, $routeParams, $location, PostCardSvc){
 
 	$scope.decks = PostCardSvc.getDecks();
-	
-	$scope.selectedDeck = PostCardSvc.getState('selectedDeck');
-	console.log("selectedDeck " + $scope.selectedDeck);
-
-	if($scope.selectedDeck == null || $scope.selectedDeck == undefined){
-		$scope.selectedDeck = PostCardSvc.getDecks()[0];
-		PostCardSvc.putState('selectedDeck',$scope.selectedDeck);
-	}
-	console.log("selectedDeck name" + $scope.selectedDeck.name);
+	$scope.selectedDeck = PostCardSvc.getSelectedDeck();
+	$scope.selectedCardId = $routeParams.cardId;
 
 
 	$scope.addDeck = function(){
@@ -23,25 +16,32 @@ function DecksCtrl($scope, PostCardSvc){
 
 	$scope.addCard =  function(deckId){
 
-		var deck = _.find($scope.decks, function(deck){ return deck.id == deckId});
-		deck.add('New Card');
+		var deck = PostCardSvc.getDeckById(deckId);
+		var card = deck.add('New Card');
+		$location.path('/decks/' + deck.id + '/cards/' + card.id);
 	}
 
 	$scope.removeCard =  function(deckId, cardId) {
 		var deck = _.find($scope.decks, function(deck){ return deck.id == deckId});
 		deck.remove(cardId);
+		$location.path('/decks/' + deck.id + '/cards/_');
 	}
 
 	$scope.selectDeck = function(deck){
 		$scope.selectedDeck = deck;
-		PostCardSvc.putState('selectedDeck',$scope.selectedDeck);
+		PostCardSvc.putState('selectedDeck',$scope.selectedDeck.name);
+		$location.path('/decks/' + deck.id + '/cards/_');
+	}
+
+	$scope.reload = function(){
+		$route.reload();
 	}
 
 }
 
 function DeckCtrl($scope,  $routeParams, PostCardSvc){
 
-	$scope.deck = _.find(PostCardSvc.getDecks(), function(deck){ return deck.id == $routeParams.deckId});
+	$scope.deck = PostCardSvc.getDeckById($routeParams.deckId);
 
 	//variables that drived the hidden edit inputs
 	$scope.editmode = {"key" : "" , "value" :"", "prevkey":"", "mode" : ""};
@@ -118,18 +118,29 @@ function DeckCtrl($scope,  $routeParams, PostCardSvc){
 
 function CardCtrl($scope, $http, $compile, $routeParams, PostCardSvc){
 	
-	console.log($routeParams.deckId);
-	$scope.deck = _.find(PostCardSvc.getDecks(),function(deck){return deck.id == $routeParams.deckId});
+	console.log("CardCtrl - Current Deck Id " + $routeParams.deckId);
+	if($routeParams.deckId == "_"){
+		$scope.deck = PostCardSvc.getSelectedDeck();
+	}else{
+		$scope.deck = PostCardSvc.getDeckById($routeParams.deckId);
+	}
 
-	console.log($scope.deck);
-	$scope.card = _.find($scope.deck.cards, function(card){ return card.id == $routeParams.cardId});
-	
+	console.log("CardCtrl - Current Deck Name " + $scope.deck.name);
+
+	if($routeParams.cardId == "_"){
+		$scope.card = $scope.deck.cards[0];
+	}else{
+		$scope.card = $scope.deck.getCardById($routeParams.cardId);
+	}
+
+
 	if($routeParams.opId != undefined || $routeParams.opId != null ){
 		$scope.card.submit($http);
 	}
 
 
 	$scope.addmode = {"key":"","value":"","property":"","map":""};
+	$scope.upaddmode = {"value":"","property":""};
 
 	console.log($scope.card);
 
@@ -159,6 +170,18 @@ function CardCtrl($scope, $http, $compile, $routeParams, PostCardSvc){
 		$scope.addmode.property = "";
 		$scope.addmode.map = "";
 	}
+
+
+	$scope.removeUrlParameter = function(property){
+		$scope.card.removeUrlParameter(property);
+	}
+	$scope.addUrlParameter = function(){
+
+		$scope.card.addUrlParameter ($scope.upaddmode.property, $scope.upaddmode.value);
+		$scope.upaddmode.property = "";
+		$scope.upaddmode.value = "";
+	}
+
 
 	$scope.toggleLink = function(key){
 		$scope.card.toggleLink(key);

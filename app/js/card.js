@@ -16,6 +16,9 @@ Card.HEADER.LOCAL.FIND= {'fromDeck': false};
 Card.WIRING = {};
 Card.WIRING.INIT = {'property' : '', 'map' : '', 'value' : ''};
 
+Card.URLPARAMETER = {};
+Card.URLPARAMETER.INIT = {'property' : '', 'value' : ''};
+
 
 function Card(name, deck){
 
@@ -28,6 +31,7 @@ function Card(name, deck){
 	this.requestData = "";
 	this.responseData = "";
 	this.response = "";
+	this.urlParameters = [];
 	this.wirings = [];
 
 	this.headers = [];
@@ -52,6 +56,13 @@ Card.prototype.restore = function(jsonObj){
 	this.requestData = jsonObj.requestData;
 	this.responseData = jsonObj.responseData;
 	this.response = "";
+
+	if(jsonObj.urlParameters == undefined){
+		this.urlParameters = [];
+	}else{
+		this.urlParameters = jsonObj.urlParameters;
+	}
+
 	if(jsonObj.wirings == undefined){
 		this.wirings = [];
 	}else{
@@ -125,6 +136,20 @@ Card.prototype.addHeader = function (type, key, value){
 
 }
 
+Card.prototype.addUrlParameter = function (property, value){
+
+	this.urlParameters.push(_.extend({}, Card.URLPARAMETER.INIT,{'property' : property, 'value' : value}));
+}
+
+
+Card.prototype.removeUrlParameter = function (property, value){
+
+	var currItem = _.findWhere(this.urlParameters, {'property' : property});
+	console.log('removeUrlParameter - search result ' + JSON.stringify(currItem));
+	this.urlParameters = _.without(this.urlParameters, currItem);
+
+}
+
 Card.prototype.addWiring = function (property, map){
 
 	this.wirings.push(_.extend({}, Card.WIRING.INIT,{'property' : property, 'map' : map}));
@@ -182,6 +207,19 @@ Card.prototype.submit = function($http){
 		});
 
 	}
+
+
+	httpConfig.params = {};
+	_.each(this.urlParameters,function(urlParameter){
+		
+		httpConfig.params[urlParameter.property] = urlParameter.value;
+		_.each(thisCard.deck.properties, function (property){
+			var regEx = new RegExp('{{' + property.key + '}}','g');
+			httpConfig.params[urlParameter.property] = httpConfig.params[urlParameter.property].replace(regEx, property.value);
+			console.log(httpConfig.params[urlParameter.property]);
+		});
+		
+	});
 
 
 	httpConfig.headers = {};

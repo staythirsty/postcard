@@ -89,6 +89,10 @@ Deck.prototype.updateProperty = function(prevkey, key, value){
 	obj.value = value;
 }
 
+Deck.prototype.getCardById = function(cardId){
+
+	return _.find(this.cards, function(card){ return card.id == cardId});
+}
 
 Deck.prototype.restore = function(jsonObj){
 

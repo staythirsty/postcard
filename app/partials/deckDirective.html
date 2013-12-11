@@ -47,7 +47,10 @@
 	      				<a href="#/decks/{{selectedDeck.id}}/cards/{{card.id}}" class="pull-left"> {{card.name}}</a>
 	      			</div>
 					<div class="col-md-1">
-							<a href="#/decks/{{selectedDeck.id}}/cards/{{card.id}}/1">
+							<a ng-show="card.id != selectedCardId" href="#/decks/{{selectedDeck.id}}/cards/{{card.id}}/1">
+								<span class="glyphicon glyphicon-play"></span>
+							</a>
+							<a ng-show="card.id == selectedCardId" ng-click="reload()">
 								<span class="glyphicon glyphicon-play"></span>
 							</a>
 	      			</div>

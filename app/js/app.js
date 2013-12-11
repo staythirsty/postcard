@@ -6,12 +6,10 @@ postCardApp.config(['$routeProvider', function($routeProvider) {
 	        templateUrl: 'partials/cards.html'
 	      }).when('/decks/:deckId/cards/:cardId/:opId', {
 	        templateUrl: 'partials/cards.html'
-	      }).when('/cards', {
-	        templateUrl: 'partials/cards.html',
 	      }).when('/decks/:deckId', {
 	        templateUrl: 'partials/decks.html',
 	      }).otherwise({
-	        redirectTo: '/cards'
+	        redirectTo: '/decks/_/cards/_'
 	      });
 
 }]);
@@ -28,7 +26,7 @@ postCardApp.factory('PostCardSvc', function() {
 
 	var decks = [];
 
-	var state = {};
+	//var state = {};
 
 	var jsonDeckArray = JSON.parse(localStorage.getItem("decks"));
 
@@ -82,11 +80,36 @@ postCardApp.factory('PostCardSvc', function() {
 			localStorage.setItem("decks", saveObj);
 			console.log(localStorage.getItem("decks"));
 		},
+		getDeckById: function (deckId){
+			return _.find(this.getDecks(),function(deck){return deck.id == deckId});
+		},
+		getSelectedDeck: function(){
+
+			//load the saved Deck from 'state' 
+			var tempSelectedDeckName = this.getState('selectedDeck');
+			var tempSelectedDeck = _.find(this.getDecks(), function(deck){return deck.name == tempSelectedDeckName});
+
+			console.log("selectedDeck (state) - " + tempSelectedDeck.name);
+
+			if(tempSelectedDeck == null || tempSelectedDeck == undefined){
+				tempSelectedDeck = this.getDecks()[0];
+				PostCardSvc.putState('selectedDeck', tempSelectedDeck.name);
+
+				console.log("selectedDeck (defaulted) - " + tempSelectedDeck.name);
+			}
+			return tempSelectedDeck;
+
+		},
+		setSelectedDeck: function(deckName){
+			this.putState('selectedDeck', deckName);
+		},
 		getState: function(attr){
-			return state[attr];
+			return localStorage.getItem(attr);
+			//return state[attr];
 		},
 		putState : function(attr, value){
-			state[attr] = value;
+			localStorage.setItem(attr, value);			
+			//state[attr] = value;
 		}
 
 
