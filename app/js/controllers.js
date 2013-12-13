@@ -15,14 +15,13 @@ function DecksCtrl($scope, $route, $routeParams, $location, PostCardSvc){
 	}
 
 	$scope.addCard =  function(deckId){
-
 		var deck = PostCardSvc.getDeckById(deckId);
 		var card = deck.add('New Card');
 		$location.path('/decks/' + deck.id + '/cards/' + card.id);
 	}
 
 	$scope.removeCard =  function(deckId, cardId) {
-		var deck = _.find($scope.decks, function(deck){ return deck.id == deckId});
+		var deck = PostCardSvc.getDeckById(deckId);
 		deck.remove(cardId);
 		$location.path('/decks/' + deck.id + '/cards/_');
 	}

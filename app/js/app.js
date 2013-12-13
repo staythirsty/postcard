@@ -89,7 +89,7 @@ postCardApp.factory('PostCardSvc', function() {
 			var tempSelectedDeckName = this.getState('selectedDeck');
 			var tempSelectedDeck = _.find(this.getDecks(), function(deck){return deck.name == tempSelectedDeckName});
 
-			console.log("selectedDeck (state) - " + tempSelectedDeck.name);
+			console.log("selectedDeck (state) - " + tempSelectedDeck);
 
 			if(tempSelectedDeck == null || tempSelectedDeck == undefined){
 				tempSelectedDeck = this.getDecks()[0];

@@ -179,9 +179,7 @@ Card.prototype.reset = function(){
 Card.prototype.submit = function($http){
 
 
-	_.each(this.wirings, function(wiring){
-		wiring.value = "";
-	});
+	this.reset();
 
 	var thisCard = this;
 	var httpConfig = {};
