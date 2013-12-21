@@ -26,3 +26,33 @@
 .deck-label{
 	text-align: right;
 }
+
+.pc-nav-stacked{
+	padding-right:0px;
+	text-align:right;
+}
+
+.pc-nav-stacked li a{
+	padding: 5px;
+	background-color: inherit;
+	color: black;
+	font-weight: bold;
+}
+
+.pc-nav-stacked li.active a{
+	background-color: #eee;
+	color: black;
+	font-weight: bold;
+}
+
+.pc-nav-stacked li.active a:hover{
+	background-color: #eee;
+	color: black;
+	font-weight: bold;
+}
+.pc-nav-stacked li.active a .badge {
+	background-color: #999;
+	color: white;
+	font-weight: bold;
+}
+

@@ -143,6 +143,11 @@ function CardCtrl($scope, $http, $compile, $routeParams, PostCardSvc){
 
 	console.log($scope.card);
 
+	$scope.refreshInputs = function() {
+
+		$scope.card.refreshInputs();
+	}
+	
 	$scope.submit = function() {
 	    var httpPromise = $scope.card.submit($http);
 	}

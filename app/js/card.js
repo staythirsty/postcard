@@ -19,6 +19,9 @@ Card.WIRING.INIT = {'property' : '', 'map' : '', 'value' : ''};
 Card.URLPARAMETER = {};
 Card.URLPARAMETER.INIT = {'property' : '', 'value' : ''};
 
+Card.INPUT = {};
+Card.INPUT.INIT = {'property' :'', 'value' : ''};
+
 
 function Card(name, deck){
 
@@ -31,8 +34,13 @@ function Card(name, deck){
 	this.requestData = "";
 	this.responseData = "";
 	this.response = "";
+	this.responseHeaders = [];
+	this.responseStatusCode = "";
+	this.responseStatusDescription = "";
 	this.urlParameters = [];
 	this.wirings = [];
+
+	this.inputs = [];
 
 	this.headers = [];
 
@@ -44,6 +52,48 @@ function Card(name, deck){
 
 }
 
+Card.prototype.refreshInputs = function(){
+
+	var thatInputs = this.inputs;
+	//URL
+	extractInput(this.url, this.inputs);
+
+	//PARAMETERS
+	_.each(this.urlParameters, function(urlParameter){
+		extractInput(urlParameter.value, thatInputs);
+	});
+
+	//HEADERS
+	_.each(this.headers, function(header){
+		extractInput(header.value, thatInputs);
+	});
+
+	//REQUEST
+	if(this.httpMethod == "POST" || this.httpMethod == "PUT"){
+		extractInput(this.requestData, this.inputs);
+	}
+
+}
+
+function extractInput(source, collection){
+
+	var regEx = new RegExp('{{[a-zA-Z0-9\.\-]+}}','g');
+
+	_.each(source.match(regEx),function(binding){
+		binding = binding.substring(2, binding.length -2);
+
+		var tempInput = _.findWhere(collection, {'property':binding});
+		console.log('binding' + binding);
+		console.log('extractInput' + tempInput);
+		console.log('collection');
+		_.each(collection,function(item){console.log(item);});
+		
+		if( tempInput == undefined){
+			collection.push(_.extend({},Card.INPUT.INIT,{'property':binding}));
+		}
+	});
+
+}
 
 
 Card.prototype.restore = function(jsonObj){
@@ -68,7 +118,10 @@ Card.prototype.restore = function(jsonObj){
 	}else{
 		this.wirings = jsonObj.wirings;
 	}
+
 	this.headers = jsonObj.headers;
+	this.inputs = jsonObj.inputs;
+
 
 }
 
@@ -138,7 +191,9 @@ Card.prototype.addHeader = function (type, key, value){
 
 Card.prototype.addUrlParameter = function (property, value){
 
-	this.urlParameters.push(_.extend({}, Card.URLPARAMETER.INIT,{'property' : property, 'value' : value}));
+	if(property != null && value != null){
+		this.urlParameters.push(_.extend({}, Card.URLPARAMETER.INIT,{'property' : property, 'value' : value}));
+	}
 }
 
 
@@ -152,6 +207,7 @@ Card.prototype.removeUrlParameter = function (property, value){
 
 Card.prototype.addWiring = function (property, map){
 
+	console.log('addWiring - property  ' + property + ' map ' + map);
 	this.wirings.push(_.extend({}, Card.WIRING.INIT,{'property' : property, 'map' : map}));
 }
 
@@ -172,9 +228,63 @@ Card.prototype.reset = function(){
 	_.each(this.wirings, function(wiring){
 		wiring.value = "";
 	});
-
-
 }
+
+Card.prototype.substituteInputs = function(value){
+
+
+	var regEx = new RegExp('{{[a-zA-Z0-9\.\-]+}}','g');
+
+	if(value.match(regEx) == null){
+		console.log('No Substitution required - value ' + value);
+		return value;
+	}
+
+
+	//local input value
+	_.each(this.inputs, function(input){
+		if(input.value != null && input.value != undefined && input.value != ''){
+			console.log('input ' + input.property + ' ' + input.value);
+			var regEx = new RegExp('{{' + input.property + '}}','g');
+			value = value.replace(regEx, input.value);
+		}
+	});
+
+	if(value.match(regEx) == null){
+		console.log('Complete Local Input Substitution. No further substitutions required - value ' + value);
+		return value;
+	}
+
+
+	//all card's output value
+	_.each(this.deck.cards, function(card){
+
+		_.each(card.wirings, function(wiring){
+
+			if(wiring.value != null && wiring.value != undefined){
+				var regEx = new RegExp('{{' + wiring.property + '}}','g');
+				value = value.replace(regEx, wiring.value);
+			}
+		});
+
+	});
+
+	if(value.match(regEx) == null){
+		console.log('Complete Wiring substitutions. No further substitutions required - value ' + value);
+		return value;
+	}
+
+	//deck properties
+	_.each(this.deck.properties, function (property){
+		var regEx = new RegExp('{{' + property.key + '}}','g');
+		value = value.replace(regEx, property.value);
+	});
+
+
+	console.log('Complete All  Substitution - value ' + value);
+	return value;
+}
+
 
 Card.prototype.submit = function($http){
 
@@ -185,37 +295,22 @@ Card.prototype.submit = function($http){
 	var httpConfig = {};
 
 	httpConfig.method = this.httpMethod;
-	httpConfig.url = this.url;
 
-	//replace properties
-	_.each(this.deck.properties, function (property){
-		var regEx = new RegExp('{{' + property.key + '}}','g');
-		httpConfig.url = httpConfig.url.replace(regEx, property.value);
-		console.log(httpConfig.url );
-	});
+	httpConfig.url = this.substituteInputs(this.url);
+	console.log('httpConfig.url ' + httpConfig.url);
 
 	if(httpConfig.method == 'POST' || httpConfig.method == "PUT"){
 		
-
-		httpConfig.data = this.requestData;
-		
-		_.each(thisCard.deck.properties, function (property){
-			var regEx = new RegExp('{{' + property.key + '}}','g');
-			httpConfig.data = httpConfig.data.replace(regEx, property.value);
-		});
+		httpConfig.data = this.substituteInputs(this.requestData);		
 
 	}
 
 
 	httpConfig.params = {};
+
 	_.each(this.urlParameters,function(urlParameter){
 		
-		httpConfig.params[urlParameter.property] = urlParameter.value;
-		_.each(thisCard.deck.properties, function (property){
-			var regEx = new RegExp('{{' + property.key + '}}','g');
-			httpConfig.params[urlParameter.property] = httpConfig.params[urlParameter.property].replace(regEx, property.value);
-			console.log(httpConfig.params[urlParameter.property]);
-		});
+		httpConfig.params[urlParameter.property] = thisCard.substituteInputs(urlParameter.value);
 		
 	});
 
@@ -223,12 +318,7 @@ Card.prototype.submit = function($http){
 	httpConfig.headers = {};
 	_.each(this.headers,function(header){
 		if(header.include){
-			httpConfig.headers[header.key] = header.value;
-			_.each(thisCard.deck.properties, function (property){
-				var regEx = new RegExp('{{' + property.key + '}}','g');
-				httpConfig.headers[header.key] = httpConfig.headers[header.key].replace(regEx, property.value);
-				console.log(httpConfig.headers[header.key]);
-			});
+			httpConfig.headers[header.key] = thisCard.substituteInputs(header.value);
 		}
 	});
 
@@ -238,21 +328,28 @@ Card.prototype.submit = function($http){
 	var httpPromise =  $http(httpConfig);
 
 	httpPromise.success(function(data, status){
+	
+		thisCard.responseStatusCode = status;
+		thisCard.responseStatusDescription = getHTTPStatus(status).description;
+
 		thisCard.responseData = data;
 		thisCard.response = JSON.stringify(data,null,'\t');
 
 		_.each(thisCard.wirings, function(wiring){
-
+			wiring.value = retriveValue(thisCard.responseData, wiring.map);
 			var currItem = _.findWhere(thisCard.deck.properties,{'key' : wiring.property});
-			console.log("currItem " +  currItem.key);
-			currItem.value = retriveValue(thisCard.responseData, wiring.map);
-			wiring.value = currItem.value;
-
+			if(currItem != undefined){
+				currItem.value = wiring.value
+			}
 		});
 
 	});
 		
 	httpPromise.error(function(data, status){
+		
+		thisCard.responseStatusCode = status;
+		thisCard.responseStatusDescription = getHTTPStatus(status).description;
+		
 		thisCard.responseData = data;
 		thisCard.response = JSON.stringify(data,null,'\t');
 	});
@@ -303,7 +400,6 @@ function retriveValue(object, path){
 	}
 
 }
-
 
 Card.prototype.toggleLink = function (key){
 	

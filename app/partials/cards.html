@@ -8,203 +8,242 @@
 
 
 	<div class="col-md-9" ng-controller="CardCtrl">
+
 		<div class="panel panel-primary">
+
 			<div class="panel-heading">
 				<b>{{card.deck.name}} / {{card.name}}</b>
 			</div>
+
 			<div class="panel-body">
-  			<form class="form-horizontal" role="form">
-			  <div class="form-group">
-			    <label for="cardName" class="col-sm-2 control-label">Name</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="cardName" placeholder="Name" ng-model="card.name">
-			    </div>
-			  </div>
-			  <!--
-			  <div class="form-group">
-			    <label for="cardDescription" class="col-sm-2 control-label">Description</label>
-			    <div class="col-sm-10">
-			      <input type="text" class="form-control" id="cardDescription" placeholder="Description" ng-model="card.description">
-			    </div>
-			  </div>
-			-->
-			  <div class="form-group">
-			    <label for="cardURL" class="col-sm-2 control-label">URL</label>
-			    <div class="col-sm-2">
-			    	<select class="form-control" id="httpMethod" ng-model="card.httpMethod">
-					  <option>GET</option>
-					  <option>POST</option>
-					  <option>PUT</option>
-					  <option>DELETE</option>
-					</select>
-			    </div>
-			    <div class="col-sm-8">
-					<input type="text" class="form-control" id="cardURL" placeholder="url" ng-model="card.url">
-			    </div>
-			  </div>
-
-
-			<div class="form-group" >
-			    <label for="requestData" class="col-sm-2 control-label">Parameters</label>
-			    <div class="col-sm-10">
-
-			    	<div class="row form-group" ng-repeat="urlParameter in card.urlParameters">
-			    		<div class="col-sm-3">
-			    			<input type="text" class="form-control" ng-model="urlParameter.property">
+  				
+  				<form class="form-horizontal" role="form">
+					
+					<div class="form-group">
+						<label for="cardName" class="col-sm-2 control-label">Name</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="cardName" placeholder="Name" ng-model="card.name">
+						</div>
+					</div>
+			  		<!--
+			  		<div class="form-group">
+			    		<label for="cardDescription" class="col-sm-2 control-label">Description</label>
+			    		<div class="col-sm-10">
+			      		<input type="text" class="form-control" id="cardDescription" placeholder="Description" ng-model="card.description">
 			    		</div>
-			    		<div class="col-sm-7">
-			    			<input type="text" class="form-control" ng-model="urlParameter.value">
+			  		</div>
+					-->
+					<div class="form-group">
+			   			<label for="cardURL" class="col-sm-2 control-label">URL</label>
+						<div class="col-sm-2">
+					    	<select class="form-control" id="httpMethod" ng-model="card.httpMethod">
+							  <option>GET</option>
+							  <option>POST</option>
+							  <option>PUT</option>
+							  <option>DELETE</option>
+							</select>
 			    		</div>
-			    		<div class="col-sm-2">
+					    <div class="col-sm-8">
+							<input type="text" class="form-control" id="cardURL" placeholder="url" ng-model="card.url">
+					    </div>
+					</div>
 
-							<a ng-click="removeUrlParameter(urlParameter.property)">
-								<span class="glyphicon glyphicon-minus-sign"></span>
-							</a>
+					<div class="form-group" >
+						
+						<ul class="col-sm-2 nav nav-pills nav-stacked pc-nav-stacked">
+							<li><a href="#parameters" data-toggle="tab">Parameters <span class="badge">{{card.urlParameters.length}}</span></a></li>
+							<li><a href="#headers" data-toggle="tab">Headers <span class="badge">{{card.headers.length}}</span></a></li>
+							<li>
+								<a href="#request" data-toggle="tab" ng-hide="card.httpMethod == 'GET' || card.httpMethod == 'DELETE'">
+									Request <span class="badge">1</span>
+								</a></li>
+							<li>
+								<a href="#inputs" ng-click="refreshInputs()" data-toggle="tab">
+									Inputs <span class="badge">{{card.inputs.length}}</span>
+								</a>
+							</li>
+							<li><a href="#outputs" data-toggle="tab">Outputs <span class="badge">{{card.wirings.length}}</span></a></li>
+						</ul>
 
-			    		</div>
-			    	</div>
+						<div class="tab-content col-sm-10" style="height:160px;overflow-y:scroll;">
+							
+							<div class="tab-pane active" id="parameters">
+			  		
+						  		<div class="row form-group" ng-repeat="urlParameter in card.urlParameters">
+						    		<div class="col-sm-4">
+						    			<input type="text" class="form-control" ng-model="urlParameter.property">
+						    		</div>
+						    		<div class="col-sm-6">
+						    			<input type="text" class="form-control" ng-model="urlParameter.value">
+						    		</div>
+						    		<div class="col-sm-2">
 
-			    	<div class="row form-group">
-			    		<div class="col-sm-3">
-			    			<!--
-			    			<select ng-model="addmode.property" ng-options="property.key for property in card.deck.properties"></select>
-			    			-->
-			    			<input type="text" class="form-control" ng-model="upaddmode.property" >
-			    		</div>
-			    		<div class="col-sm-7">
-			    			<input type="text" class="form-control" ng-model="upaddmode.value">
-			    		</div>
-			    		<div class="col-sm-2">
+										<a ng-click="removeUrlParameter(urlParameter.property)">
+											<span class="glyphicon glyphicon-minus-sign"></span>
+										</a>
 
-							<a  ng-click="addUrlParameter()">
-								<span class="glyphicon glyphicon-plus-sign"></span>
-							</a>
+						    		</div>
+						    	</div>
 
-			    		</div>
-			    	</div>
+						    	<div class="row form-group">
+						    		<div class="col-sm-4">
+						    			<!--
+						    			<select ng-model="addmode.property" ng-options="property.key for property in card.deck.properties"></select>
+						    			-->
+						    			<input type="text" class="form-control" ng-model="upaddmode.property" >
+						    		</div>
+						    		<div class="col-sm-6">
+						    			<input type="text" class="form-control" ng-model="upaddmode.value">
+						    		</div>
+						    		<div class="col-sm-2">
 
-			    </div>
-			  </div>
+										<a  ng-click="addUrlParameter()">
+											<span class="glyphicon glyphicon-plus-sign"></span>
+										</a>
+
+						    		</div>
+						    	</div>
+			  				</div>
+				
+							<div class="tab-pane" id="headers">
+			  					<div class="row form-group" ng-repeat="header in card.headers">
+						    		<div class="col-sm-4">
+						    			<input type="text" class="form-control" ng-model="header.key" ng-disabled="header.fromDeck">
+						    		</div>
+						    		<div class="col-sm-6">
+						    			<input type="text" class="form-control" ng-model="header.value" ng-disabled="header.linked">
+						    		</div>
+						    		<div class="col-sm-2">
+
+										<a ng-hide="header.fromDeck" ng-click="removeHeader(header.key)">
+											<span class="glyphicon glyphicon-minus-sign"></span>
+										</a>
+
+										<a ng-show="header.fromDeck" ng-click="toggleLink(header.key)">
+											<span ng-class="{'text-success' : header.linked , 'text-danger' : !header.linked}" class="glyphicon glyphicon-link"/>
+										</a>
+
+										<a ng-show="header.fromDeck" ng-click="header.include = !header.include">
+											<span ng-class="{'text-success' : header.include , 'text-danger' : !header.include}" class="glyphicon glyphicon-send"/>
+										</a>
+
+						    		</div>
+			    				</div>
+
+						    	<div class="row form-group">
+						    		<div class="col-sm-4">
+						    			<input type="text" class="form-control" ng-model="addmode.key" >
+						    		</div>
+						    		<div class="col-sm-6">
+						    			<input type="text" class="form-control" ng-model="addmode.value">
+						    		</div>
+						    		<div class="col-sm-2">
+
+										<a  ng-click="addHeader()">
+											<span class="glyphicon glyphicon-plus-sign"></span>
+										</a>
+
+						    		</div>
+						    	</div>	
+							</div>
+				
+							<div class="tab-pane" id="inputs">
+								
+						    	<div class="row form-group" ng-repeat="input in card.inputs">
+						    		<div class="col-sm-4">
+						    			<input type="text" class="form-control" ng-model="input.property">
+						    		</div>
+						    		<div class="col-sm-6">
+						    			<input type="text" class="form-control" ng-model="input.value" >
+						    		</div>
+						    		<div class="col-sm-2">
+
+						    		</div>
+						    	</div>
+
+							</div>
+
+							<div class="tab-pane" id="request" ng-hide="card.httpMethod == 'GET' || card.httpMethod == 'DELETE'">
+			    				<textarea class="form-control" rows="7" ng-model="card.requestData"></textarea>
+							</div>
+							<!--output tab-->
+							<div class="tab-pane" id="outputs">
+					
+						    	<div class="row form-group" ng-repeat="wiring in card.wirings">
+						    		<div class="col-sm-3">
+						    			<input type="text" class="form-control" ng-model="wiring.property">
+						    		</div>
+						    		<div class="col-sm-3">
+						    			<input type="text" class="form-control" ng-model="wiring.map" >
+						    		</div>
+						    		<div class="col-sm-4">
+						    			<input type="text" class="form-control" ng-model="wiring.value" disabled>
+						    		</div>
+						    		<div class="col-sm-2">
+
+										<a ng-click="removeWiring(wiring.property)">
+											<span class="glyphicon glyphicon-minus-sign"></span>
+										</a>
+
+						    		</div>
+						    	</div>
+
+						    	<div class="row form-group">
+			    					<div class="col-sm-3">
+						    			<!--
+						    			<select ng-model="addmode.property" ng-options="property.key for property in card.deck.properties"></select>
+						    			-->
+			    						<input type="text" class="form-control" ng-model="addmode.property" >
+			    					</div>
+			    					<div class="col-sm-3">
+			    						<input type="text" class="form-control" ng-model="addmode.map">
+			    					</div>
+			    					<div class="col-sm-4">
+			    					</div>
+						    		<div class="col-sm-2">
+										<a  ng-click="addWiring()">
+											<span class="glyphicon glyphicon-plus-sign"></span>
+										</a>
+									</div>
+			    				</div>
+							</div>
+
+						</div>
+
+					</div>
 
 
-			  <div class="form-group" >
-			    <label for="requestData" class="col-sm-2 control-label">Headers</label>
-			    <div class="col-sm-10">
+					<div class="form-group">
+						<div class="col-sm-10 col-md-offset-2">
+							<button type="button" ng-click="submit()" class="btn btn-primary btn-sm">
+								<span class="glyphicon glyphicon-play"/> Submit
+							</button>
+							<button type="button" ng-click="reset()" class="btn btn-warning btn-sm">
+								<span class="glyphicon glyphicon-retweet"/> Reset
+							</button>
+							<button ng-click="refreshInputs()">refresh</button>
+						</div>
+					</div>
 
-			    	<div class="row form-group" ng-repeat="header in card.headers">
-			    		<div class="col-sm-3">
-			    			<input type="text" class="form-control" ng-model="header.key" ng-disabled="header.fromDeck">
-			    		</div>
-			    		<div class="col-sm-7">
-			    			<input type="text" class="form-control" ng-model="header.value" ng-disabled="header.linked">
-			    		</div>
-			    		<div class="col-sm-2">
+					<div class="form-group">
+						<label for="responseData" class="col-sm-2 control-label">Response Status</label>
+						<div class="col-sm-10" style="padding-top:4px;padding-bottom:4px;">
+							<span class="badge">{{card.responseStatusCode}}</span> {{card.responseStatusDescription}}
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="responseData" class="col-sm-2 control-label">Response</label>
+						<div class="col-sm-10">
+							<textarea class="form-control" rows="10" id="response" ng-model="card.response"></textarea>
+						</div>
+					</div>
 
-							<a ng-hide="header.fromDeck" ng-click="removeHeader(header.key)">
-								<span class="glyphicon glyphicon-minus-sign"></span>
-							</a>
+				</form>
 
-							<a ng-show="header.fromDeck" ng-click="toggleLink(header.key)">
-								<span ng-class="{'text-success' : header.linked , 'text-danger' : !header.linked}" class="glyphicon glyphicon-link"/>
-							</a>
+			</div><!--panel-body>
 
-							<a ng-show="header.fromDeck" ng-click="header.include = !header.include">
-								<span ng-class="{'text-success' : header.include , 'text-danger' : !header.include}" class="glyphicon glyphicon-send"/>
-							</a>
-
-			    		</div>
-			    	</div>
-
-			    	<div class="row form-group">
-			    		<div class="col-sm-3">
-			    			<input type="text" class="form-control" ng-model="addmode.key" >
-			    		</div>
-			    		<div class="col-sm-7">
-			    			<input type="text" class="form-control" ng-model="addmode.value">
-			    		</div>
-			    		<div class="col-sm-2">
-
-							<a  ng-click="addHeader()">
-								<span class="glyphicon glyphicon-plus-sign"></span>
-							</a>
-
-			    		</div>
-			    	</div>
-
-			    </div>
-			  </div>
-
-
-			<div class="form-group" >
-			    <label for="requestData" class="col-sm-2 control-label">Wirings</label>
-			    <div class="col-sm-10">
-
-			    	<div class="row form-group" ng-repeat="wiring in card.wirings">
-			    		<div class="col-sm-3">
-			    			<input type="text" class="form-control" ng-model="wiring.property">
-			    		</div>
-			    		<div class="col-sm-3">
-			    			<input type="text" class="form-control" ng-model="wiring.map" >
-			    		</div>
-			    		<div class="col-sm-4">
-			    			<input type="text" class="form-control" ng-model="wiring.value" disabled>
-			    		</div>
-			    		<div class="col-sm-2">
-
-							<a ng-click="removeWiring(wiring.property)">
-								<span class="glyphicon glyphicon-minus-sign"></span>
-							</a>
-
-			    		</div>
-			    	</div>
-
-			    	<div class="row form-group">
-			    		<div class="col-sm-3">
-			    			<!--
-			    			<select ng-model="addmode.property" ng-options="property.key for property in card.deck.properties"></select>
-			    			-->
-			    			<input type="text" class="form-control" ng-model="addmode.property" >
-			    		</div>
-			    		<div class="col-sm-3">
-			    			<input type="text" class="form-control" ng-model="addmode.map">
-			    		</div>
-			    		<div class="col-sm-4">
-			    		</div>
-			    		<div class="col-sm-2">
-
-							<a  ng-click="addWiring()">
-								<span class="glyphicon glyphicon-plus-sign"></span>
-							</a>
-
-			    		</div>
-			    	</div>
-
-			    </div>
-			  </div>
-
-
-			  <div class="form-group" ng-hide="card.httpMethod == 'GET' || card.httpMethod == 'DELETE'">
-			    <label for="requestData" class="col-sm-2 control-label">Request</label>
-			    <div class="col-sm-10">
-			    	<textarea class="form-control" rows="3" ng-model="card.requestData"></textarea>
-			    </div>
-			  </div>
-			  <div class="form-group">
-			    <div class="col-sm-10 col-md-offset-2">
-			    	<button type="button" ng-click="submit()" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-play"/> Submit</button>
-			    	<button type="button" ng-click="reset()" class="btn btn-warning btn-sm"><span class="glyphicon glyphicon-retweet"/> Reset</button>
-			    </div>
-			  </div>
-
-			  <div class="form-group">
-			    <label for="responseData" class="col-sm-2 control-label">Response</label>
-			    <div class="col-sm-10">
-			    	<textarea class="form-control" rows="10" id="response" ng-model="card.response"></textarea>
-			    </div>
-			  </div>
-		  
-			</form>
-
-			</div>
+		</div><!--panel-->
+	
 	</div>
+
 </div>
