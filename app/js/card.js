@@ -35,6 +35,7 @@ function Card(name, deck){
 	this.responseData = "";
 	this.response = "";
 	this.responseHeaders = [];
+	this.responseHeadersLength = 0;
 	this.responseStatusCode = "";
 	this.responseStatusDescription = "";
 	this.urlParameters = [];
@@ -327,13 +328,17 @@ Card.prototype.submit = function($http){
 
 	var httpPromise =  $http(httpConfig);
 
-	httpPromise.success(function(data, status){
+	httpPromise.success(function(data, status, headers){
 	
 		thisCard.responseStatusCode = status;
 		thisCard.responseStatusDescription = getHTTPStatus(status).description;
 
 		thisCard.responseData = data;
 		thisCard.response = JSON.stringify(data,null,'\t');
+		thisCard.responseHeaders = headers();
+		if(thisCard.responseHeaders != null && thisCard.responseHeaders != undefined){
+			thisCard.responseHeadersLength = _.keys(thisCard.responseHeaders).length;
+		}
 
 		_.each(thisCard.wirings, function(wiring){
 			wiring.value = retriveValue(thisCard.responseData, wiring.map);

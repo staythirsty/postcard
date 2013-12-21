@@ -231,11 +231,39 @@
 							<span class="badge">{{card.responseStatusCode}}</span> {{card.responseStatusDescription}}
 						</div>
 					</div>
+
 					<div class="form-group">
-						<label for="responseData" class="col-sm-2 control-label">Response</label>
-						<div class="col-sm-10">
-							<textarea class="form-control" rows="10" id="response" ng-model="card.response"></textarea>
+						
+						<ul class="col-sm-2 nav nav-pills nav-stacked pc-nav-stacked">
+							<li><a href="#response" data-toggle="tab">Response</a></li>
+							<li>
+								<a href="#responseheaders" data-toggle="tab">
+									Headers <span class="badge">{{card.responseHeadersLength}}</span>
+								</a>
+							</li>
+						</ul>
+
+
+						<div class="tab-content col-sm-10" style="height:160px;overflow-y:scroll;">
+							<div class="tab-pane active" id="response">
+								<textarea class="form-control" rows="10" id="response" ng-model="card.response"></textarea>
+							</div>
+
+							<div class="tab-pane" id="responseheaders">
+				  				<div class="row form-group" ng-repeat="(key, value) in card.responseHeaders">
+							    	<div class="col-sm-4">
+							    		<input type="text" class="form-control" ng-model="key">
+							    	</div>
+							    	<div class="col-sm-6">
+							    		<input type="text" class="form-control" ng-model="value">
+							    	</div>
+							    	<div class="col-sm-2">
+							    	</div>
+				    			</div>
+	    		
+							</div>
 						</div>
+
 					</div>
 
 				</form>
