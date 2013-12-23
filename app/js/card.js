@@ -20,7 +20,7 @@ Card.URLPARAMETER = {};
 Card.URLPARAMETER.INIT = {'property' : '', 'value' : ''};
 
 Card.INPUT = {};
-Card.INPUT.INIT = {'property' :'', 'value' : ''};
+Card.INPUT.INIT = {'property' :'', 'value' : '','autowiring' : false};
 
 
 function Card(name, deck){
@@ -120,8 +120,17 @@ Card.prototype.restore = function(jsonObj){
 		this.wirings = jsonObj.wirings;
 	}
 
-	this.headers = jsonObj.headers;
-	this.inputs = jsonObj.inputs;
+	if(jsonObj.headers == undefined){
+		this.headers = [];
+	}else{
+		this.headers = jsonObj.headers;
+	}
+
+	if(jsonObj.inputs == undefined){
+		this.inputs = [];
+	}else{
+		this.inputs = jsonObj.inputs;
+	}
 
 
 }
