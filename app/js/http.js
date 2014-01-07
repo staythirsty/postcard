@@ -1,3 +1,5 @@
+var HTTPStatus = {};
+
 HTTPStatus.code = [
 	{"status": 100, "description" : "Continue"},
 	{"status": 101, "description" : "Switching Protocols"},

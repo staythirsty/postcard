@@ -48,9 +48,9 @@
 					    </div>
 					</div>
 
-					<div class="form-group" >
+					<div class="form-group tabs-left" >
 						
-						<ul class="col-sm-2 nav nav-pills nav-stacked pc-nav-stacked">
+						<ul class="col-sm-2 nav nav-tabs pc-nav-stacked">
 							<li><a href="#parameters" data-toggle="tab">Parameters <span class="badge">{{card.urlParameters.length}}</span></a></li>
 							<li><a href="#headers" data-toggle="tab">Headers <span class="badge">{{card.headers.length}}</span></a></li>
 							<li>
@@ -151,10 +151,10 @@
 								
 						    	<div class="row form-group" ng-repeat="input in card.inputs">
 						    		<div class="col-sm-4">
-						    			<input type="text" class="form-control" ng-model="input.property">
+						    			<input type="text" class="form-control" ng-model="input.property" ng-disabled="true">
 						    		</div>
 						    		<div class="col-sm-6">
-						    			<input type="text" class="form-control" ng-model="input.value" >
+						    			<input type="text" class="form-control" placeholder="autowire" ng-model="input.value" >
 						    		</div>
 						    		<div class="col-sm-2">
 
@@ -221,7 +221,6 @@
 							<button type="button" ng-click="reset()" class="btn btn-warning btn-sm">
 								<span class="glyphicon glyphicon-retweet"/> Reset
 							</button>
-							<button ng-click="refreshInputs()">refresh</button>
 						</div>
 					</div>
 
@@ -232,9 +231,10 @@
 						</div>
 					</div>
 
-					<div class="form-group">
+
+					<div class="form-group tabs-left" >
 						
-						<ul class="col-sm-2 nav nav-pills nav-stacked pc-nav-stacked">
+						<ul class="col-sm-2 nav nav-tabs pc-nav-stacked">
 							<li><a href="#response" data-toggle="tab">Response</a></li>
 							<li>
 								<a href="#responseheaders" data-toggle="tab">
@@ -252,7 +252,8 @@
 							<div class="tab-pane" id="responseheaders">
 				  				<div class="row form-group" ng-repeat="(key, value) in card.responseHeaders">
 							    	<div class="col-sm-4">
-							    		<input type="text" class="form-control" ng-model="key">
+							    		<span class="label">{{key}}</span>
+							    		<!-- <input type="text" class="form-control" ng-model="key"> -->
 							    	</div>
 							    	<div class="col-sm-6">
 							    		<input type="text" class="form-control" ng-model="value">
@@ -268,10 +269,46 @@
 
 				</form>
 
-			</div><!--panel-body>
+			</div><!--panel-body-->
 
 		</div><!--panel-->
 	
+		<!-- Modal -->
+		<div class="modal fade" id="resolve-modal" tabindex="-1" role="dialog">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        <h4 class="modal-title" id="myModalLabel">Please provide inputs</h4>
+		      </div>
+		      <div class="modal-body">
+
+		      		<div class="row form-group" ng-repeat="unresolvedBinding in unresolvedBindings">
+						<div class="col-sm-4">
+							<input type="text" class="form-control" ng-disabled="true" ng-model="unresolvedBinding.property">
+						</div>
+			    		
+			    		<div ng-show="unresolvedBinding.stagingValue == null" class="col-sm-6">
+			    			<input type="text" class="form-control" ng-model="unresolvedBinding.resolvedValue">
+			    		</div>
+
+			    		<div ng-hide="unresolvedBinding.stagingValue == null" class="col-sm-6">
+			    			<select ng-model="unresolvedBinding.resolvedValue" 
+			    				ng-options="c[unresolvedBinding.select] as c[unresolvedBinding.label] for c in unresolvedBinding.stagingValue">
+								<option value="">-- choose one --</option>
+							</select>
+			    		</div>
+
+			    	</div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="proceedSubmit()">Submit</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
 	</div>
 
 </div>

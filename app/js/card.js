@@ -20,7 +20,7 @@ Card.URLPARAMETER = {};
 Card.URLPARAMETER.INIT = {'property' : '', 'value' : ''};
 
 Card.INPUT = {};
-Card.INPUT.INIT = {'property' :'', 'value' : '','autowiring' : false};
+Card.INPUT.INIT = {'property' :'', 'value' : '', 'resolvedValue' : ''};
 
 
 function Card(name, deck){
@@ -32,6 +32,7 @@ function Card(name, deck){
 	this.url = "";
 	this.httpMethod = "GET";
 	this.requestData = "";
+	this.rawRequest = "";
 	this.responseData = "";
 	this.response = "";
 	this.responseHeaders = [];
@@ -45,55 +46,69 @@ function Card(name, deck){
 
 	this.headers = [];
 
-	deckHeaders = this.headers;
+	this.isBindingsResolved = false;
+
+	thisHeader = this.headers;
 
 	_.each(deck.headers, function(header){
-		deckHeaders.push(_.extend({}, Card.HEADER.GLOBAL.INIT,header));
+		thisHeader.push(_.extend({}, Card.HEADER.GLOBAL.INIT,header));
 	});
-
 }
 
 Card.prototype.refreshInputs = function(){
 
-	var thatInputs = this.inputs;
+	var newInputs = [];
+	var thisInput = this.inputs;
+
 	//URL
-	extractInput(this.url, this.inputs);
+	extractInput(this.url, thisInput, newInputs);
 
 	//PARAMETERS
 	_.each(this.urlParameters, function(urlParameter){
-		extractInput(urlParameter.value, thatInputs);
+		extractInput(urlParameter.value, thisInput, newInputs);
 	});
 
 	//HEADERS
 	_.each(this.headers, function(header){
-		extractInput(header.value, thatInputs);
+		extractInput(header.value, thisInput, newInputs);
 	});
 
 	//REQUEST
 	if(this.httpMethod == "POST" || this.httpMethod == "PUT"){
-		extractInput(this.requestData, this.inputs);
+		extractInput(this.requestData, thisInput, newInputs);
 	}
+
+	//check if any of the new inputs good added or removed
+
+	newInputs = _.uniq(newInputs);
+
+	console.log('newInputs' + newInputs);
+	_.each(newInputs, function(ip) {
+		console.log(ip);
+	});
+
+	this.inputs = _.intersection(newInputs, thisInput);
+
 
 }
 
-function extractInput(source, collection){
+function extractInput(source, collection, newcollection){
 
 	var regEx = new RegExp('{{[a-zA-Z0-9\.\-]+}}','g');
 
 	_.each(source.match(regEx),function(binding){
+
 		binding = binding.substring(2, binding.length -2);
 
 		var tempInput = _.findWhere(collection, {'property':binding});
-		console.log('binding' + binding);
-		console.log('extractInput' + tempInput);
-		console.log('collection');
-		_.each(collection,function(item){console.log(item);});
 		
 		if( tempInput == undefined){
-			collection.push(_.extend({},Card.INPUT.INIT,{'property':binding}));
+			tempInput = _.extend({},Card.INPUT.INIT,{'property':binding});
+			collection.push(tempInput);
 		}
+		newcollection.push(tempInput);
+		
 	});
-
 }
 
 
@@ -131,8 +146,6 @@ Card.prototype.restore = function(jsonObj){
 	}else{
 		this.inputs = jsonObj.inputs;
 	}
-
-
 }
 
 Card.prototype.removeHeader = function (key, type){
@@ -180,7 +193,6 @@ Card.prototype.updateHeader = function (type, prevKey, key, value){
 		currItem.key = key;
 		currItem.value = value;
 	}
-	
 }
 
 Card.prototype.addHeader = function (type, key, value){
@@ -212,7 +224,6 @@ Card.prototype.removeUrlParameter = function (property, value){
 	var currItem = _.findWhere(this.urlParameters, {'property' : property});
 	console.log('removeUrlParameter - search result ' + JSON.stringify(currItem));
 	this.urlParameters = _.without(this.urlParameters, currItem);
-
 }
 
 Card.prototype.addWiring = function (property, map){
@@ -227,21 +238,135 @@ Card.prototype.removeWiring = function (property, map){
 	var currItem = _.findWhere(this.wirings, {'property' : property});
 	console.log('removeWiring - search result ' + JSON.stringify(currItem));
 	this.wirings = _.without(this.wirings, currItem);
-
 }
 
 Card.prototype.reset = function(){
 
 	this.responseData = null;
 	this.response = null;
+	this.responseHeaders = null;
 
 	_.each(this.wirings, function(wiring){
 		wiring.value = "";
 	});
 }
 
-Card.prototype.substituteInputs = function(value){
 
+Card.prototype.resolveBinding = function(input){
+
+
+	input.resolvedValue = null;
+	input.stagingValue = null;
+
+
+	console.log("Resolve Binding for Input " + input.property);
+
+	var binding = input.property;
+	var isStaging = false;
+
+	if(input.value !=null && input.value != undefined && input.value != ""){
+
+		if( input.value.indexOf('{{') != 0 && input.value.indexOf('$') != 0){
+			input.resolvedValue = input.value;
+			console.log("Resolved Value - Self " + input.resolvedValue);
+			return true;
+		}
+
+		if( input.value.indexOf('{{') == 0 ){
+			console.log("Change Binding variable -  " + input.value);
+			binding = input.value;
+		}
+
+		if(input.value.indexOf('$') == 0 ){
+			console.log("Staging variable");
+
+			var regEx = new RegExp('{{[a-zA-Z0-9\.\-]+}}','g');
+			var matches = input.value.match(regEx)
+
+			if(matches != null){
+				binding = matches[0].substring(2,matches[0].length -2);
+				console.log("Change Binding variable -  " + binding);
+				isStaging = true;
+
+				var segments = input.value.split(',');
+
+				input.label = segments[1].substring(1,segments[1].length -1);
+				input.select = segments[2].substring(1,segments[2].length -2);
+
+			}else{
+
+				console.log('wrong format ' + input.value);
+				return false;
+			}
+		}
+	}
+
+
+	_.each(this.deck.cards, function(card){
+
+		var tempWiring = _.findWhere(card.wirings, {'property' : binding});
+
+		if(tempWiring !=null && tempWiring != undefined){
+			if(isStaging){
+				input.stagingValue = tempWiring.value;
+				console.log("Staging Value - Card Wiring Card ID = " + card.id + ' Value = ' + input.stagingValue);
+			}else{
+				input.resolvedValue = tempWiring.value;
+				console.log("Resolved Value - Card Wiring Card ID = " + card.id + ' Value = ' + input.resolvedValue);
+			}
+		}
+
+	});
+
+	if(input.resolvedValue != null){
+		return true;
+	}else if (input.stagingValue != null){
+		return false;
+	}
+
+
+	//deck properties
+	var tempProperty = _.findWhere(this.deck.properties, {'key' : binding});
+	
+	if(tempProperty !=null && tempProperty != undefined){
+		if(isStaging){
+			input.stagingValue = tempProperty.value;
+			console.log("Staging Value - Deck Property " + input.stagingValue);
+			return false;
+		}else{
+			input.resolvedValue = tempProperty.value;
+			console.log("Resolved Value - Deck Property " + input.resolvedValue);
+			return true;
+
+		}
+	}
+
+	console.log('Unable to resolve value for input ' + input.property);
+	return false;
+
+}
+
+Card.prototype.resolveBindings = function(){
+	
+
+	thisCard = this;
+	this.refreshInputs();
+
+	thisCard.isBindingsResolved = true;
+	
+	var unboundInputs = [];
+	
+	_.each(this.inputs, function(input){
+		if(thisCard.resolveBinding(input) == false){
+			unboundInputs.push(input);
+			thisCard.isBindingsResolved = false;
+		}
+	});
+
+	return unboundInputs;
+}
+
+Card.prototype.substituteInputs = function(value){
 
 	var regEx = new RegExp('{{[a-zA-Z0-9\.\-]+}}','g');
 
@@ -253,50 +378,24 @@ Card.prototype.substituteInputs = function(value){
 
 	//local input value
 	_.each(this.inputs, function(input){
-		if(input.value != null && input.value != undefined && input.value != ''){
-			console.log('input ' + input.property + ' ' + input.value);
+		if(input.resolvedValue != null && input.resolvedValue != undefined && input.resolvedValue != ''){
+			console.log('input ' + input.property + ' ' + input.resolvedValue);
 			var regEx = new RegExp('{{' + input.property + '}}','g');
-			value = value.replace(regEx, input.value);
+			value = value.replace(regEx, input.resolvedValue);
 		}
 	});
 
 	if(value.match(regEx) == null){
 		console.log('Complete Local Input Substitution. No further substitutions required - value ' + value);
 		return value;
-	}
-
-
-	//all card's output value
-	_.each(this.deck.cards, function(card){
-
-		_.each(card.wirings, function(wiring){
-
-			if(wiring.value != null && wiring.value != undefined){
-				var regEx = new RegExp('{{' + wiring.property + '}}','g');
-				value = value.replace(regEx, wiring.value);
-			}
-		});
-
-	});
-
-	if(value.match(regEx) == null){
-		console.log('Complete Wiring substitutions. No further substitutions required - value ' + value);
+	}else{
+		console.log('Complete All  Substitution - but unbound variable still exist ' + value);
 		return value;
 	}
-
-	//deck properties
-	_.each(this.deck.properties, function (property){
-		var regEx = new RegExp('{{' + property.key + '}}','g');
-		value = value.replace(regEx, property.value);
-	});
-
-
-	console.log('Complete All  Substitution - value ' + value);
-	return value;
 }
 
 
-Card.prototype.submit = function($http){
+Card.prototype.submit = function($http, override){
 
 
 	this.reset();
@@ -305,6 +404,15 @@ Card.prototype.submit = function($http){
 	var httpConfig = {};
 
 	httpConfig.method = this.httpMethod;
+
+	if(override != true){
+		this.resolveBindings();
+		if(this.isBindingsResolved == false){
+			var error = new Error("Unresolved Bindings");
+			error.name = "PC.100";
+			throw error;
+		}
+	}
 
 	httpConfig.url = this.substituteInputs(this.url);
 	console.log('httpConfig.url ' + httpConfig.url);
@@ -412,7 +520,6 @@ function retriveValue(object, path){
 		console.log(object[path]);
 		return object[path];
 	}
-
 }
 
 Card.prototype.toggleLink = function (key){

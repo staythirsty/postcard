@@ -1,5 +1,5 @@
 
-function DecksCtrl($scope, $route, $routeParams, $location, PostCardSvc){
+function DecksCtrl($scope, $log, $route, $routeParams, $location, PostCardSvc){
 
 	$scope.decks = PostCardSvc.getDecks();
 	$scope.selectedDeck = PostCardSvc.getSelectedDeck();
@@ -11,6 +11,8 @@ function DecksCtrl($scope, $route, $routeParams, $location, PostCardSvc){
 	}
 
 	$scope.save = function(){
+		$log.log("Saving Decks. Selected Deck" + $scope.selectedDeck.name);	
+		PostCardSvc.putState('selectedDeck',$scope.selectedDeck.name);
 		PostCardSvc.saveDecks();
 	}
 
@@ -108,10 +110,6 @@ function DeckCtrl($scope,  $routeParams, PostCardSvc){
 			$scope.deck.removeProperty(key);
 
 	}
-
-	$scope.save = function(){
-		PostCardSvc.saveDecks();
-	}
 }
 
 
@@ -134,7 +132,7 @@ function CardCtrl($scope, $http, $compile, $routeParams, PostCardSvc){
 
 
 	if($routeParams.opId != undefined || $routeParams.opId != null ){
-		$scope.card.submit($http);
+		$scope.submit();
 	}
 
 
@@ -148,8 +146,25 @@ function CardCtrl($scope, $http, $compile, $routeParams, PostCardSvc){
 		$scope.card.refreshInputs();
 	}
 	
-	$scope.submit = function() {
-	    var httpPromise = $scope.card.submit($http);
+	$scope.proceedSubmit = function(){
+		$('#resolve-modal').modal('hide');
+		$scope.submit(true);
+	}
+
+	$scope.submit = function(override) {
+
+		if(override != true){
+			
+			$scope.unresolvedBindings = $scope.card.resolveBindings();
+		
+			if($scope.unresolvedBindings.length > 0){
+				$('#resolve-modal').modal('show');
+			}else{
+				var httpPromise = $scope.card.submit($http);
+			}
+		}else{
+			var httpPromise = $scope.card.submit($http,override);
+		}
 	}
 
 	$scope.reset = function(){

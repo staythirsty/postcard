@@ -27,8 +27,8 @@ postCardApp.factory('PostCardSvc', function() {
 	var decks = [];
 
 	//var state = {};
-
-	var jsonDeckArray = JSON.parse(localStorage.getItem("decks"));
+	var lsDecks = localStorage.getItem("decks");
+	var jsonDeckArray = JSON.parse(lsDecks);
 
 	if(jsonDeckArray == undefined || jsonDeckArray == null){
 		decks.push(new Deck("My Deck"));
