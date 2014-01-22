@@ -14,10 +14,25 @@ postCardApp.config(['$routeProvider', function($routeProvider) {
 
 }]);
 
-postCardApp.directive('navdeck', function() {
+postCardApp.directive('navdeck', function($timeout) {
     return {
       restrict: 'E',
-      templateUrl: 'partials/deckDirective.html'
+      templateUrl: 'partials/deckDirective.html',
+      link: function(scope, element, attrs){
+
+      		$timeout(function() {
+
+      			$('.sortable').sortable().bind('sortupdate', function() {
+      				var cardIds = [];
+      				$('.sortable li').each(function(i){
+      					cardIds.push($(this).attr('id'));
+      				});
+					//alert(cardIds.join("--"));
+					scope.selectedDeck.sort(cardIds);
+        		});
+
+      		}, 1000);
+      }
     }
 });
 

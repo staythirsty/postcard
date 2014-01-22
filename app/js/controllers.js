@@ -27,6 +27,11 @@ function DecksCtrl($scope, $log, $route, $routeParams, $location, PostCardSvc){
 		deck.remove(cardId);
 		$location.path('/decks/' + deck.id + '/cards/_');
 	}
+	$scope.cloneCard =  function(deckId, cardId) {
+		var deck = PostCardSvc.getDeckById(deckId);
+		var clonedCard = deck.clone(cardId);
+		$location.path('/decks/' + deck.id + '/cards/' + clonedCard.id);
+	}
 
 	$scope.selectDeck = function(deck){
 		$scope.selectedDeck = deck;
@@ -90,25 +95,48 @@ function DeckCtrl($scope,  $routeParams, PostCardSvc){
 	
 	$scope.addItem = function(mode){
 
-		if(mode == "HEADER")
-			$scope.deck.addHeader($scope.headeraddmode.key,$scope.headeraddmode.value);
-		else
-			$scope.deck.addProperty($scope.propertyaddmode.key,$scope.propertyaddmode.value);
+		$scope.errorFlag = false;
+		$scope.errorMessage = null;
+
+		try{
+
+			if(mode == "HEADER")
+				$scope.deck.addHeader($scope.headeraddmode.key,$scope.headeraddmode.value);
+			else
+				$scope.deck.addProperty($scope.propertyaddmode.key,$scope.propertyaddmode.value);
 
 
-		$scope.headeraddmode.key = "";
-		$scope.headeraddmode.value = "";
-		$scope.propertyaddmode.key = "";
-		$scope.propertyaddmode.value = "";
+			$scope.headeraddmode.key = "";
+			$scope.headeraddmode.value = "";
+			$scope.propertyaddmode.key = "";
+			$scope.propertyaddmode.value = "";
+
+		}catch(err){
+			console.log("error" + err);
+			$scope.errorFlag = true;
+			$scope.errorMessage = err.message;
+		}
+
+
 	}
 
 	$scope.removeItem = function(key, mode){
 
-		if(mode == "HEADER")
-			$scope.deck.removeHeader(key);
-		else
-			$scope.deck.removeProperty(key);
+		$scope.errorFlag = false;
+		$scope.errorMessage = null;
 
+		try{
+			
+			if(mode == "HEADER")
+				$scope.deck.removeHeader(key);
+			else
+				$scope.deck.removeProperty(key);
+
+		}catch(err){
+			console.log("error" + err);
+			$scope.errorFlag = true;
+			$scope.errorMessage = err.message;
+		}
 	}
 }
 
@@ -175,6 +203,7 @@ function CardCtrl($scope, $http, $compile, $routeParams, PostCardSvc){
 		$scope.card.removeHeader(key, Card.HEADER.LOCAL.TYPE);
 	}
 	$scope.addHeader = function(){
+
 		$scope.card.addHeader(Card.HEADER.LOCAL.TYPE, $scope.addmode.key, $scope.addmode.value);
 		$scope.addmode.key = "";
 		$scope.addmode.value = "";

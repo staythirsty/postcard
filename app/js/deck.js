@@ -32,6 +32,34 @@ Deck.prototype.remove = function(cardId){
 
 };
 
+
+Deck.prototype.clone = function(cardId){
+
+	var currItem = _.findWhere(this.cards, {"id" : cardId});
+	var clonedCard = currItem.clone();
+	this.cards.push(clonedCard);
+
+	return clonedCard;
+};
+
+
+Deck.prototype.sort = function(cardOrder){
+
+	var thisDeck = this;
+
+	var newCardArray = [];
+	
+	_.each(cardOrder,function(cardId){
+
+		newCardArray.push(_.findWhere(thisDeck.cards, {"id" : parseInt(cardId)}));
+
+	});
+
+	this.cards = newCardArray;
+
+}
+
+
 Deck.prototype.removeHeader = function (key){
 
 	var currItem = _.findWhere(this.headers, {"key" : key});
@@ -46,6 +74,15 @@ Deck.prototype.removeHeader = function (key){
 };
 
 Deck.prototype.addHeader = function (key, value){
+
+	if(key == null || value == null || key.trim() == "" || value.trim() == ""){
+		throwError("DECK.001");
+	}
+	
+	var existingHeader = _.findWhere(this.headers,{'key' : key});
+	if(existingHeader != undefined || existingHeader != null){
+		throwError("DECK.002");
+	}
 
 	var newHeader = _.extend({}, Deck.HEADER.INIT, {"key":key,"value":value});
 	this.headers.push(newHeader);

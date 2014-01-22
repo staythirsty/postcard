@@ -148,6 +148,14 @@ Card.prototype.restore = function(jsonObj){
 	}
 }
 
+Card.prototype.clone = function(){
+
+	var clone = _.extend({}, this);
+	clone.id = Card.counter++;
+	clone.name = clone.name + ' - Clone';
+	return clone;
+}
+
 Card.prototype.removeHeader = function (key, type){
 
 	var searchCriteria = {'key' : key};
@@ -451,7 +459,8 @@ Card.prototype.submit = function($http, override){
 		thisCard.responseStatusDescription = getHTTPStatus(status).description;
 
 		thisCard.responseData = data;
-		thisCard.response = JSON.stringify(data,null,'\t');
+		thisCard.response = jsonPrettyPrint(data);
+		//JSON.stringify(data,null,'\t');
 		thisCard.responseHeaders = headers();
 		if(thisCard.responseHeaders != null && thisCard.responseHeaders != undefined){
 			thisCard.responseHeadersLength = _.keys(thisCard.responseHeaders).length;
