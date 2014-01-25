@@ -1,5 +1,7 @@
 var postCardApp = angular.module('postCardApp', ['ngSanitize']);
 
+postCardApp.config(function($compileProvider){ $compileProvider.urlSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|chrome-extension):/); });
+
 postCardApp.config(['$routeProvider', function($routeProvider) {
 	    
 	    $routeProvider.when('/decks/:deckId/cards/:cardId', {
@@ -36,6 +38,21 @@ postCardApp.directive('navdeck', function($timeout) {
     }
 });
 
+postCardApp.directive('alert', function(){
+	return {
+      restrict: 'E',
+      templateUrl: 'partials/alert.html',
+      controller: function($scope){
+      	
+      	$scope.close = function(){
+      		$scope.alert.flag = false;
+      	}
+
+      }
+	}
+
+});
+
 
 postCardApp.factory('PostCardSvc', function() {
 
@@ -43,16 +60,24 @@ postCardApp.factory('PostCardSvc', function() {
 
 	//var state = {};
 	var lsDecks = localStorage.getItem("decks");
-	var jsonDeckArray = JSON.parse(lsDecks);
 
-	if(jsonDeckArray == undefined || jsonDeckArray == null){
-		decks.push(new Deck("My Deck"));
+	if(lsDecks != undefined || lsDecks != null){
+
+		var jsonDeckArray = JSON.parse(lsDecks);
+
+		if(jsonDeckArray == undefined || jsonDeckArray == null){
+			decks.push(new Deck("My Deck"));
+			localStorage.setItem("selectedDeck", "My Deck");
+		}else{
+			_.each(jsonDeckArray,function(jsonDeck){
+				var deckObj = new Deck();
+				deckObj.restore(jsonDeck);
+				decks.push(deckObj);		
+			});
+		}	
 	}else{
-		_.each(jsonDeckArray,function(jsonDeck){
-			var deckObj = new Deck();
-			deckObj.restore(jsonDeck);
-			decks.push(deckObj);		
-		});
+		decks.push(new Deck("My Deck"));
+		localStorage.setItem("selectedDeck", "My Deck");
 	}
 
 	Deck.counter = _.max(decks, function(deck){return deck.id;}).id + 1;

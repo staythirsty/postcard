@@ -54,6 +54,18 @@ function DeckCtrl($scope,  $routeParams, PostCardSvc){
 	$scope.headeraddmode = {"key" : "" , "value" :""};
 	$scope.propertyaddmode = {"key" : "" , "value" :""};
 
+	$scope.clearAlert = function(){
+		$scope.alert = {};
+		$scope.alert.flag = false;
+		$scope.alert.message = null;
+	}
+
+	$scope.setAlert = function(err){
+		$scope.alert.flag = true;
+		$scope.alert.message = err.message;
+	}
+
+
 	$scope.editItem = function(key, mode){
 
 		var objectList =  $scope.deck.properties;
@@ -79,24 +91,31 @@ function DeckCtrl($scope,  $routeParams, PostCardSvc){
 
 	$scope.saveItem = function(mode){
 
-		if(mode == "HEADER"){
-				$scope.deck.updateHeader($scope.editmode.prevkey, $scope.editmode.key, $scope.editmode.value);
-		}else{
-			$scope.deck.updateProperty($scope.editmode.prevkey, $scope.editmode.key, $scope.editmode.value);
+
+		$scope.clearAlert();
+
+		try{
+
+			if(mode == "HEADER"){
+					$scope.deck.updateHeader($scope.editmode.prevkey, $scope.editmode.key, $scope.editmode.value);
+			}else{
+				$scope.deck.updateProperty($scope.editmode.prevkey, $scope.editmode.key, $scope.editmode.value);
+			}
+
+			$scope.editmode.key = "";
+			$scope.editmode.prevkey = "";
+			$scope.editmode.value  = "";
+			$scope.editmode.mode = "";
+			$scope.editmode.isNew = false;
+
+		}catch(err){
+			$scope.setAlert(err);
 		}
-
-		$scope.editmode.key = "";
-		$scope.editmode.prevkey = "";
-		$scope.editmode.value  = "";
-		$scope.editmode.mode = "";
-		$scope.editmode.isNew = false;
-
 	}
 	
 	$scope.addItem = function(mode){
 
-		$scope.errorFlag = false;
-		$scope.errorMessage = null;
+		$scope.clearAlert();
 
 		try{
 
@@ -112,9 +131,7 @@ function DeckCtrl($scope,  $routeParams, PostCardSvc){
 			$scope.propertyaddmode.value = "";
 
 		}catch(err){
-			console.log("error" + err);
-			$scope.errorFlag = true;
-			$scope.errorMessage = err.message;
+			$scope.setAlert(err);
 		}
 
 
@@ -122,8 +139,8 @@ function DeckCtrl($scope,  $routeParams, PostCardSvc){
 
 	$scope.removeItem = function(key, mode){
 
-		$scope.errorFlag = false;
-		$scope.errorMessage = null;
+
+		$scope.clearAlert();
 
 		try{
 			
@@ -133,9 +150,7 @@ function DeckCtrl($scope,  $routeParams, PostCardSvc){
 				$scope.deck.removeProperty(key);
 
 		}catch(err){
-			console.log("error" + err);
-			$scope.errorFlag = true;
-			$scope.errorMessage = err.message;
+			$scope.setAlert(err);
 		}
 	}
 }
@@ -168,6 +183,17 @@ function CardCtrl($scope, $http, $compile, $routeParams, PostCardSvc){
 	$scope.upaddmode = {"value":"","property":""};
 
 	console.log($scope.card);
+
+	$scope.clearAlert = function(){
+		$scope.alert = {};
+		$scope.alert.flag = false;
+		$scope.alert.message = null;
+	}
+
+	$scope.setAlert = function(err){
+		$scope.alert.flag = true;
+		$scope.alert.message = err.message;
+	}
 
 	$scope.refreshInputs = function() {
 
@@ -204,9 +230,14 @@ function CardCtrl($scope, $http, $compile, $routeParams, PostCardSvc){
 	}
 	$scope.addHeader = function(){
 
-		$scope.card.addHeader(Card.HEADER.LOCAL.TYPE, $scope.addmode.key, $scope.addmode.value);
-		$scope.addmode.key = "";
-		$scope.addmode.value = "";
+		$scope.clearAlert();
+		try{
+			$scope.card.addHeader(Card.HEADER.LOCAL.TYPE, $scope.addmode.key, $scope.addmode.value);
+			$scope.addmode.key = "";
+			$scope.addmode.value = "";
+		}catch(err){
+			$scope.setAlert(err);
+		}
 	}
 
 	$scope.removeWiring = function(property){
@@ -214,9 +245,14 @@ function CardCtrl($scope, $http, $compile, $routeParams, PostCardSvc){
 	}
 	$scope.addWiring = function(){
 
-		$scope.card.addWiring($scope.addmode.property, $scope.addmode.map);
-		$scope.addmode.property = "";
-		$scope.addmode.map = "";
+		$scope.clearAlert();
+		try{
+			$scope.card.addWiring($scope.addmode.property, $scope.addmode.map);
+			$scope.addmode.property = "";
+			$scope.addmode.map = "";
+		}catch(err){
+			$scope.setAlert(err);
+		}
 	}
 
 
@@ -224,10 +260,14 @@ function CardCtrl($scope, $http, $compile, $routeParams, PostCardSvc){
 		$scope.card.removeUrlParameter(property);
 	}
 	$scope.addUrlParameter = function(){
-
-		$scope.card.addUrlParameter ($scope.upaddmode.property, $scope.upaddmode.value);
-		$scope.upaddmode.property = "";
-		$scope.upaddmode.value = "";
+		$scope.clearAlert();
+		try{
+			$scope.card.addUrlParameter ($scope.upaddmode.property, $scope.upaddmode.value);
+			$scope.upaddmode.property = "";
+			$scope.upaddmode.value = "";
+		}catch(err){
+			$scope.setAlert(err);
+		}
 	}
 
 

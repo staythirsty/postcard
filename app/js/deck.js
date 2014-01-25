@@ -73,16 +73,24 @@ Deck.prototype.removeHeader = function (key){
 
 };
 
-Deck.prototype.addHeader = function (key, value){
-
+Deck.prototype.validateHeader = function (key, value,prevkey){
+	
 	if(key == null || value == null || key.trim() == "" || value.trim() == ""){
 		throwError("DECK.001");
 	}
 	
-	var existingHeader = _.findWhere(this.headers,{'key' : key});
-	if(existingHeader != undefined || existingHeader != null){
-		throwError("DECK.002");
+	if(key != prevkey){
+		var existingHeader = _.findWhere(this.headers,{'key' : key});
+		if(existingHeader != undefined || existingHeader != null){
+			throwError("DECK.002");
+		}
 	}
+
+}
+
+Deck.prototype.addHeader = function (key, value){
+
+	this.validateHeader(key,value);
 
 	var newHeader = _.extend({}, Deck.HEADER.INIT, {"key":key,"value":value});
 	this.headers.push(newHeader);
@@ -96,6 +104,8 @@ Deck.prototype.addHeader = function (key, value){
 
 Deck.prototype.updateHeader = function(prevkey, key, value){
 	
+	this.validateHeader(key,value, prevkey);
+
 	var obj = _.findWhere(this.headers,{'key' : prevkey});
 	obj.key = key;
 	obj.value = value;
@@ -108,6 +118,21 @@ Deck.prototype.updateHeader = function(prevkey, key, value){
 };
 
 
+Deck.prototype.validateProperty= function (key, value, prevkey){
+	
+	if(key == null || value == null || key.trim() == "" || value.trim() == ""){
+		throwError("DECK.003");
+	}
+	
+	if(key != prevkey){
+		var existingHeader = _.findWhere(this.properties,{'key' : key});
+		if(existingHeader != undefined || existingHeader != null){
+			throwError("DECK.004");
+		}
+	}
+
+}
+
 Deck.prototype.removeProperty = function (key){
 
 	var currItem = _.findWhere(this.properties, {"key" : key});
@@ -117,12 +142,16 @@ Deck.prototype.removeProperty = function (key){
 
 Deck.prototype.addProperty = function (key, value){
 
+	this.validateProperty(key,value);
+
 	var newProperty = _.extend({}, Deck.PROPERTY.INIT, {"key":key,"value":value});
 	this.properties.push(newProperty);
 };
 
 Deck.prototype.updateProperty = function(prevkey, key, value){
 	
+	this.validateProperty(key,value, prevkey);
+
 	var obj = _.findWhere(this.properties,{'key' : prevkey});
 	obj.key = key;
 	obj.value = value;

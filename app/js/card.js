@@ -176,6 +176,10 @@ Card.prototype.removeHeader = function (key, type){
 
 Card.prototype.updateHeader = function (type, prevKey, key, value){
 
+	if(type != Card.HEADER.GLOBAL.TYPE){
+		this.validateHeader(key, value);
+	}
+
 	var searchCriteria = {'key' : prevKey};
 
 	//GLOBAL called only from Deck Object
@@ -203,23 +207,50 @@ Card.prototype.updateHeader = function (type, prevKey, key, value){
 	}
 }
 
+Card.prototype.validateHeader = function (key, value, prevkey){
+	
+	if(key == null || value == null || key.trim() == "" || value.trim() == ""){
+		throwError("CARD.001");
+	}
+	
+	if(key != prevkey){
+
+		var existingHeader = _.findWhere(this.headers, {'key' : key});
+		if(existingHeader != undefined || existingHeader != null){
+			throwError("CARD.002");
+		}
+	}
+
+}
+
 Card.prototype.addHeader = function (type, key, value){
 	
-	console.log('addHeader ' + type + key + value);
-
-	console.log(Card.HEADER.GLOBAL.INIT);
-	console.log(_.extend({'key':key, 'value':value}, Card.HEADER.GLOBAL.INIT));
-
 	//GLOBAL called only from Deck Object
 	if(type == Card.HEADER.GLOBAL.TYPE){
 		this.headers.push(_.extend({},Card.HEADER.GLOBAL.INIT,{'key':key, 'value':value}));
 	}else{
+		this.validateHeader(key, value);
 		this.headers.push(_.extend({},Card.HEADER.LOCAL.INIT,{'key':key, 'value':value}));
 	}
 
 }
 
+Card.prototype.validateUrlParameter = function (property, value){
+	
+	if(property == null || value == null || property.trim() == "" || value.trim() == ""){
+		throwError("CARD.003");
+	}
+	
+	var existingProperty = _.findWhere(this.urlParameters, {'property' : property});
+	if(existingProperty != undefined || existingProperty != null){
+		throwError("CARD.004");
+	}
+	
+}
+
 Card.prototype.addUrlParameter = function (property, value){
+
+	this.validateUrlParameter(property,value);
 
 	if(property != null && value != null){
 		this.urlParameters.push(_.extend({}, Card.URLPARAMETER.INIT,{'property' : property, 'value' : value}));
@@ -234,9 +265,23 @@ Card.prototype.removeUrlParameter = function (property, value){
 	this.urlParameters = _.without(this.urlParameters, currItem);
 }
 
+
+Card.prototype.validateWiring = function (property, map){
+	
+	if(property == null || map == null || property.trim() == "" || map.trim() == ""){
+		throwError("CARD.005");
+	}
+	
+	var existingWiring = _.findWhere(this.wirings, {'property' : property});
+	if(existingWiring != undefined || existingWiring != null){
+		throwError("CARD.006");
+	}
+	
+}
+
 Card.prototype.addWiring = function (property, map){
 
-	console.log('addWiring - property  ' + property + ' map ' + map);
+	this.validateWiring(property,map);
 	this.wirings.push(_.extend({}, Card.WIRING.INIT,{'property' : property, 'map' : map}));
 }
 
