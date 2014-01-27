@@ -209,7 +209,7 @@ Card.prototype.updateHeader = function (type, prevKey, key, value){
 
 Card.prototype.validateHeader = function (key, value, prevkey){
 	
-	if(key == null || value == null || key.trim() == "" || value.trim() == ""){
+	if(Utils.Val.isEmpty(key) || Utils.Val.isEmpty(value)){
 		throwError("CARD.001");
 	}
 	
@@ -237,7 +237,7 @@ Card.prototype.addHeader = function (type, key, value){
 
 Card.prototype.validateUrlParameter = function (property, value){
 	
-	if(property == null || value == null || property.trim() == "" || value.trim() == ""){
+	if(Utils.Val.isEmpty(property) || Utils.Val.isEmpty(value)){
 		throwError("CARD.003");
 	}
 	
@@ -268,7 +268,7 @@ Card.prototype.removeUrlParameter = function (property, value){
 
 Card.prototype.validateWiring = function (property, map){
 	
-	if(property == null || map == null || property.trim() == "" || map.trim() == ""){
+	if(Utils.Val.isEmpty(property) || Utils.Val.isEmpty(map)){
 		throwError("CARD.005");
 	}
 	
@@ -447,11 +447,21 @@ Card.prototype.substituteInputs = function(value){
 	}
 }
 
+Card.prototype.validate = function(){
+
+	if(Utils.Val.isEmpty(this.url)){
+		throwError("CARD.007");
+	}
+
+}
 
 Card.prototype.submit = function($http, override){
 
 
 	this.reset();
+
+	this.validate();
+
 
 	var thisCard = this;
 	var httpConfig = {};

@@ -2,13 +2,13 @@
 
 <div class="row">
 
-	<div class="col-md-3" ng-controller="DecksCtrl">
+	<div class="col-lg-3 pc-left-nav" ng-controller="DecksCtrl">
 		<navdeck></navdeck>
 	</div>
 
 
-	<div class="col-md-9" ng-controller="DeckCtrl">
-		<div class="panel panel-primary">
+	<div class="col-lg-9" ng-controller="DeckCtrl">
+		<div class="panel panel-primary pc-main-panel">
 			<div class="panel-heading">
 				<b>{{deck.name}}</b>
 			</div>
@@ -17,37 +17,35 @@
 
 
 			  <div class="form-group">
-			    <div class="col-sm-12" style="height:25px;text-align:center;color:red">
+			    <div class="col-lg-12" style="height:25px;text-align:center;color:red">
 			      <span class="error" ng-show="myForm.deckName.$error.required">Required!</span>
-				
 					<alert/>
-
 			    </div>
 			  </div>
 
 			  <div class="form-group">
-			    <label for="deckName" class="col-sm-2 control-label">Name</label>
-			    <div class="col-sm-10">
+			    <label for="deckName" class="col-lg-2 control-label">Name</label>
+			    <div class="col-lg-10">
 			      <input name="deckName" type="text" required class="form-control" id="deckName" placeholder="Name" ng-model="deck.name">
 			    </div>
 			  </div>
 
 
 			  <div class="form-group">
-			    <label class="col-sm-2 control-label">Properties</label>
-			    <div class="col-sm-10">
+			    <label class="col-lg-2 control-label">Properties</label>
+			    <div class="col-lg-10">
 					
 					<div class="row form-group" ng-repeat="property in deck.properties">
 
-			    		<div class="col-md-4">
+			    		<div class="col-lg-4">
 			    			<input ng-hide="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" type="text" class="form-control" value="{{property.key}}" disabled>
 			    			<input ng-show="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" type="text" class="form-control" ng-model="editmode.key">
 		    			</div>
-		    			<div class="col-md-6">
+		    			<div class="col-lg-6">
 			    			<input ng-hide="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" type="text" class="form-control" value="{{property.value}}" disabled>
 			    			<input ng-show="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" type="text" class="form-control" ng-model="editmode.value">
 		    			</div>
-		    			<div class="col-md-2 header-control">
+		    			<div class="col-lg-2 header-control">
 							<a ng-hide="editmode.mode == 'PROPERTY' && editmode.prevkey == property.key" ng-click="removeItem(property.key,'PROPERTY')">
 								<span class="glyphicon glyphicon-minus-sign"></span>
 							</a>
@@ -65,13 +63,13 @@
 			    	</div>
 
 					<div class="row form-group">
-			    		<div class="col-md-4">
+			    		<div class="col-lg-4">
 			    			<input type="text" class="form-control" ng-model="propertyaddmode.key">
 		    			</div>
-		    			<div class="col-md-6">
+		    			<div class="col-lg-6">
 			    			<input type="text" class="form-control" ng-model="propertyaddmode.value">
 		    			</div>
-		    			<div class="col-md-2 header-control">
+		    			<div class="col-lg-2 header-control">
 							<a  ng-click="addItem('PROPERTY')">
 								<span class="glyphicon glyphicon-plus-sign"></span>
 							</a>
@@ -83,20 +81,20 @@
 
 
 			  <div class="form-group" >
-			    <label for="requestData" class="col-sm-2 control-label">Headers</label>
-			    <div class="col-sm-10">
+			    <label for="requestData" class="col-lg-2 control-label">Headers</label>
+			    <div class="col-lg-10">
 
 			    	<div class="row form-group" ng-repeat="header in deck.headers">
 
-			    		<div class="col-md-4">
+			    		<div class="col-lg-4">
 			    			<input ng-hide="editmode.mode == 'HEADER' && editmode.prevkey == header.key" type="text" class="form-control" value="{{header.key}}" disabled>
 			    			<input ng-show="editmode.mode == 'HEADER' && editmode.prevkey == header.key" type="text" class="form-control" ng-model="editmode.key">
 		    			</div>
-		    			<div class="col-md-6">
+		    			<div class="col-lg-6">
 			    			<input ng-hide="editmode.mode == 'HEADER' && editmode.prevkey == header.key" type="text" class="form-control" value="{{header.value}}" disabled>
 			    			<input ng-show="editmode.mode == 'HEADER' && editmode.prevkey == header.key" type="text" class="form-control" ng-model="editmode.value">
 		    			</div>
-		    			<div class="col-md-2 header-control">
+		    			<div class="col-lg-2 header-control">
 							<a ng-hide="editmode.mode == 'HEADER' && editmode.prevkey == header.key" ng-click="removeItem(header.key,'HEADER')">
 								<span class="glyphicon glyphicon-minus-sign"></span>
 							</a>
@@ -113,13 +111,13 @@
 
 			    	</div>
 					<div class="row form-group">
-			    		<div class="col-md-4">
+			    		<div class="col-lg-4">
 			    			<input type="text" class="form-control" ng-model="headeraddmode.key">
 		    			</div>
-		    			<div class="col-md-6">
+		    			<div class="col-lg-6">
 			    			<input type="text" class="form-control" ng-model="headeraddmode.value">
 		    			</div>
-		    			<div class="col-md-2 header-control">
+		    			<div class="col-lg-2 header-control">
 							<a  ng-click="addItem('HEADER')">
 								<span class="glyphicon glyphicon-plus-sign"></span>
 							</a>

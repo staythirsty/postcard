@@ -75,7 +75,7 @@ Deck.prototype.removeHeader = function (key){
 
 Deck.prototype.validateHeader = function (key, value,prevkey){
 	
-	if(key == null || value == null || key.trim() == "" || value.trim() == ""){
+	if(Utils.Val.isEmpty(key) || Utils.Val.isEmpty(value)){
 		throwError("DECK.001");
 	}
 	
@@ -120,7 +120,7 @@ Deck.prototype.updateHeader = function(prevkey, key, value){
 
 Deck.prototype.validateProperty= function (key, value, prevkey){
 	
-	if(key == null || value == null || key.trim() == "" || value.trim() == ""){
+	if(Utils.Val.isEmpty(key) || Utils.Val.isEmpty(value)){
 		throwError("DECK.003");
 	}
 	

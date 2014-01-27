@@ -2,14 +2,14 @@
 
 <div class="row">
 
-	<div class="col-md-3" ng-controller="DecksCtrl">
+	<div class="col-lg-3 pc-left-nav" ng-controller="DecksCtrl">
 		<navdeck></navdeck>
 	</div>
 
 
-	<div class="col-md-9" ng-controller="CardCtrl">
+	<div class="col-lg-9" ng-controller="CardCtrl">
 
-		<div class="panel panel-primary">
+		<div class="panel panel-primary pc-main-panel">
 
 			<div class="panel-heading">
 				<b>{{card.deck.name}} / {{card.name}}</b>
@@ -22,30 +22,28 @@
 
 
 				  <div class="form-group">
-				    <div class="col-sm-12" style="height:25px;text-align:center;color:red">
-					
+				    <div class="col-lg-12" style="height:25px;text-align:center;color:red">
 						<alert/>
-
 				    </div>
 				  </div>
 					
 					<div class="form-group">
-						<label for="cardName" class="col-sm-2 control-label">Name</label>
-						<div class="col-sm-10">
+						<label for="cardName" class="col-lg-2 control-label">Name</label>
+						<div class="col-lg-10">
 							<input type="text" class="form-control" id="cardName" placeholder="Name" ng-model="card.name">
 						</div>
 					</div>
 			  		<!--
 			  		<div class="form-group">
-			    		<label for="cardDescription" class="col-sm-2 control-label">Description</label>
-			    		<div class="col-sm-10">
+			    		<label for="cardDescription" class="col-lg-2 control-label">Description</label>
+			    		<div class="col-lg-10">
 			      		<input type="text" class="form-control" id="cardDescription" placeholder="Description" ng-model="card.description">
 			    		</div>
 			  		</div>
 					-->
 					<div class="form-group">
-			   			<label for="cardURL" class="col-sm-2 control-label">URL</label>
-						<div class="col-sm-2">
+			   			<label for="cardURL" class="col-lg-2 control-label">URL</label>
+						<div class="col-lg-2">
 					    	<select class="form-control" id="httpMethod" ng-model="card.httpMethod">
 							  <option>GET</option>
 							  <option>POST</option>
@@ -53,14 +51,14 @@
 							  <option>DELETE</option>
 							</select>
 			    		</div>
-					    <div class="col-sm-8">
+					    <div class="col-lg-8">
 							<input type="text" class="form-control" id="cardURL" placeholder="url" ng-model="card.url">
 					    </div>
 					</div>
 
 					<div class="form-group tabs-left" >
 						
-						<ul class="col-sm-2 nav nav-tabs pc-nav-stacked">
+						<ul class="col-lg-2 nav nav-tabs pc-nav-stacked">
 							<li class="active">
 								<a href="#parameters" data-toggle="tab">Parameters <span class="badge">{{card.urlParameters.length}}</span></a>
 							</li>
@@ -76,18 +74,18 @@
 							</li>
 						</ul>
 
-						<div class="tab-content col-sm-10" style="height:160px;overflow-y:scroll;">
+						<div class="tab-content col-lg-10" style="height:160px;overflow-y:scroll;">
 							
 							<div class="tab-pane active" id="parameters">
 			  		
 						  		<div class="row form-group" ng-repeat="urlParameter in card.urlParameters">
-						    		<div class="col-sm-4">
+						    		<div class="col-lg-4">
 						    			<input type="text" class="form-control" ng-model="urlParameter.property">
 						    		</div>
-						    		<div class="col-sm-6">
+						    		<div class="col-lg-6">
 						    			<input type="text" class="form-control" ng-model="urlParameter.value">
 						    		</div>
-						    		<div class="col-sm-2">
+						    		<div class="col-lg-2">
 
 										<a ng-click="removeUrlParameter(urlParameter.property)">
 											<span class="glyphicon glyphicon-minus-sign"></span>
@@ -97,16 +95,16 @@
 						    	</div>
 
 						    	<div class="row form-group">
-						    		<div class="col-sm-4">
+						    		<div class="col-lg-4">
 						    			<!--
 						    			<select ng-model="addmode.property" ng-options="property.key for property in card.deck.properties"></select>
 						    			-->
 						    			<input type="text" class="form-control" ng-model="upaddmode.property" >
 						    		</div>
-						    		<div class="col-sm-6">
+						    		<div class="col-lg-6">
 						    			<input type="text" class="form-control" ng-model="upaddmode.value">
 						    		</div>
-						    		<div class="col-sm-2">
+						    		<div class="col-lg-2">
 
 										<a  ng-click="addUrlParameter()">
 											<span class="glyphicon glyphicon-plus-sign"></span>
@@ -118,13 +116,13 @@
 				
 							<div class="tab-pane" id="headers">
 			  					<div class="row form-group" ng-repeat="header in card.headers">
-						    		<div class="col-sm-4">
+						    		<div class="col-lg-4">
 						    			<input type="text" class="form-control" ng-model="header.key" ng-disabled="header.fromDeck">
 						    		</div>
-						    		<div class="col-sm-6">
+						    		<div class="col-lg-6">
 						    			<input type="text" class="form-control" ng-model="header.value" ng-disabled="header.linked">
 						    		</div>
-						    		<div class="col-sm-2">
+						    		<div class="col-lg-2">
 
 										<a ng-hide="header.fromDeck" ng-click="removeHeader(header.key)">
 											<span class="glyphicon glyphicon-minus-sign"></span>
@@ -142,13 +140,13 @@
 			    				</div>
 
 						    	<div class="row form-group">
-						    		<div class="col-sm-4">
+						    		<div class="col-lg-4">
 						    			<input type="text" class="form-control" ng-model="addmode.key" >
 						    		</div>
-						    		<div class="col-sm-6">
+						    		<div class="col-lg-6">
 						    			<input type="text" class="form-control" ng-model="addmode.value">
 						    		</div>
-						    		<div class="col-sm-2">
+						    		<div class="col-lg-2">
 
 										<a  ng-click="addHeader()">
 											<span class="glyphicon glyphicon-plus-sign"></span>
@@ -161,13 +159,13 @@
 							<div class="tab-pane" id="inputs">
 								
 						    	<div class="row form-group" ng-repeat="input in card.inputs">
-						    		<div class="col-sm-4">
+						    		<div class="col-lg-4">
 						    			<input type="text" class="form-control" ng-model="input.property" ng-disabled="true">
 						    		</div>
-						    		<div class="col-sm-6">
+						    		<div class="col-lg-6">
 						    			<input type="text" class="form-control" placeholder="autowire" ng-model="input.value" >
 						    		</div>
-						    		<div class="col-sm-2">
+						    		<div class="col-lg-2">
 
 						    		</div>
 						    	</div>
@@ -184,7 +182,7 @@
 
 
 					<div class="form-group">
-						<div class="col-sm-10 col-md-offset-2">
+						<div class="col-lg-10 col-lg-offset-2">
 							<button type="button" ng-click="submit()" class="btn btn-primary btn-sm">
 								<span class="glyphicon glyphicon-play"></span> Submit
 							</button>
@@ -195,8 +193,8 @@
 					</div>
 
 					<div class="form-group">
-						<label for="responseData" class="col-sm-2 control-label">Response Status</label>
-						<div class="col-sm-10" style="padding-top:4px;padding-bottom:4px;">
+						<label for="responseData" class="col-lg-2 control-label">Response Status</label>
+						<div class="col-lg-10" style="padding-top:4px;padding-bottom:4px;">
 							<span class="badge">{{card.responseStatusCode}}</span> {{card.responseStatusDescription}}
 						</div>
 					</div>
@@ -204,7 +202,7 @@
 
 					<div class="form-group tabs-left" >
 						
-						<ul class="col-sm-2 nav nav-tabs pc-nav-stacked">
+						<ul class="col-lg-2 nav nav-tabs pc-nav-stacked">
 							<li class="active"><a href="#response" data-toggle="tab">Response</a></li>
 							<li>
 								<a href="#responseheaders" data-toggle="tab">
@@ -217,7 +215,7 @@
 						</ul>
 
 
-						<div class="tab-content col-sm-10" style="height:225px;overflow-y:scroll;">
+						<div class="tab-content col-lg-10" style="height:225px;overflow-y:scroll;">
 							<div class="tab-pane active" id="response">
 								<pre style="min-height:225px" id="pretty_json" ng-bind-html-unsafe="card.response"></pre>
 							</div>
@@ -237,16 +235,16 @@
 							<div class="tab-pane" id="outputs">
 					
 						    	<div class="row form-group" ng-repeat="wiring in card.wirings">
-						    		<div class="col-sm-3">
+						    		<div class="col-lg-3">
 						    			<input type="text" class="form-control" ng-model="wiring.property">
 						    		</div>
-						    		<div class="col-sm-3">
+						    		<div class="col-lg-3">
 						    			<input type="text" class="form-control" ng-model="wiring.map" >
 						    		</div>
-						    		<div class="col-sm-4">
+						    		<div class="col-lg-4">
 						    			<input type="text" class="form-control" ng-model="wiring.value" disabled>
 						    		</div>
-						    		<div class="col-sm-2">
+						    		<div class="col-lg-2">
 
 										<a ng-click="removeWiring(wiring.property)">
 											<span class="glyphicon glyphicon-minus-sign"></span>
@@ -256,18 +254,18 @@
 						    	</div>
 
 						    	<div class="row form-group">
-			    					<div class="col-sm-3">
+			    					<div class="col-lg-3">
 						    			<!--
 						    			<select ng-model="addmode.property" ng-options="property.key for property in card.deck.properties"></select>
 						    			-->
 			    						<input type="text" class="form-control" ng-model="addmode.property" >
 			    					</div>
-			    					<div class="col-sm-3">
+			    					<div class="col-lg-3">
 			    						<input type="text" class="form-control" ng-model="addmode.map">
 			    					</div>
-			    					<div class="col-sm-4">
+			    					<div class="col-lg-4">
 			    					</div>
-						    		<div class="col-sm-2">
+						    		<div class="col-lg-2">
 										<a  ng-click="addWiring()">
 											<span class="glyphicon glyphicon-plus-sign"></span>
 										</a>
@@ -296,15 +294,15 @@
 		      <div class="modal-body">
 
 		      		<div class="row form-group" ng-repeat="unresolvedBinding in unresolvedBindings">
-						<div class="col-sm-4">
+						<div class="col-lg-4">
 							<input type="text" class="form-control" ng-disabled="true" ng-model="unresolvedBinding.property">
 						</div>
 			    		
-			    		<div ng-show="unresolvedBinding.stagingValue == null" class="col-sm-6">
+			    		<div ng-show="unresolvedBinding.stagingValue == null" class="col-lg-6">
 			    			<input type="text" class="form-control" ng-model="unresolvedBinding.resolvedValue">
 			    		</div>
 
-			    		<div ng-hide="unresolvedBinding.stagingValue == null" class="col-sm-6">
+			    		<div ng-hide="unresolvedBinding.stagingValue == null" class="col-lg-6">
 			    			<select ng-model="unresolvedBinding.resolvedValue" 
 			    				ng-options="c[unresolvedBinding.select] as c[unresolvedBinding.label] for c in unresolvedBinding.stagingValue">
 								<option value="">-- choose one --</option>

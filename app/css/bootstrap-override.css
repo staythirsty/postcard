@@ -1,3 +1,26 @@
+.pc-container{
+	min-width: 1150px;
+}
+.pc-main-panel{
+	min-width: 875px;
+}
+.pc-left-nav{
+	min-width: 275px;
+}
+
+.pc-alert{
+	left: 50%; 
+	width: 400px; 
+	margin-left:-75px;
+	position: fixed;
+	top:5px;
+	padding-top:3px;
+	padding-bottom:3px;
+	z-index:1000;
+	opacity: 0.9;
+}
+
+
 .form-control {
 
 	height: 28px;

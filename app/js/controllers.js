@@ -207,18 +207,26 @@ function CardCtrl($scope, $http, $compile, $routeParams, PostCardSvc){
 
 	$scope.submit = function(override) {
 
-		if(override != true){
+		$scope.clearAlert();
+
+		try{
+
+			if(override != true){
+				
+				$scope.unresolvedBindings = $scope.card.resolveBindings();
 			
-			$scope.unresolvedBindings = $scope.card.resolveBindings();
-		
-			if($scope.unresolvedBindings.length > 0){
-				$('#resolve-modal').modal('show');
+				if($scope.unresolvedBindings.length > 0){
+					$('#resolve-modal').modal('show');
+				}else{
+					var httpPromise = $scope.card.submit($http);
+				}
 			}else{
-				var httpPromise = $scope.card.submit($http);
+				var httpPromise = $scope.card.submit($http,override);
 			}
-		}else{
-			var httpPromise = $scope.card.submit($http,override);
-		}
+			
+		}catch(err){
+			$scope.setAlert(err);
+		}		
 	}
 
 	$scope.reset = function(){

@@ -3,11 +3,12 @@
 		<div class="panel panel-default" style="overflow:inherit">
 		<div class="panel-heading">
 			<h4 class="panel-title">
-				<div class="row" style="padding: 5px 0px;">
+				<div class="row">
 
-					<div class="col-md-7">
+					<div class="col-lg-7">
 
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="caret" style="font-size:20px"></span> {{selectedDeck.name}} </a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<span class="caret" style="font-size:20px"></span> {{selectedDeck.name}} </a>
 				        <ul class="dropdown-menu" style="overflow:visible;">
 							<li><a ng-click="addDeck()">New Deck </a></li>
 							<li class="divider"></li>
@@ -16,18 +17,18 @@
 
 					</div>
 
-					<div class="col-md-1">
+					<div class="col-lg-1">
 						<a href="#/decks/{{selectedDeck.id}}">
 							<span class="glyphicon glyphicon-wrench"></span>
 						</a>
 					</div>
 
-					<div class="col-md-1">
+					<div class="col-lg-1">
 						<a ng-click="save()">
 							<span class="glyphicon glyphicon-floppy-save"></span>
 						</a>
 					</div>
-					<div class="col-md-1">
+					<div class="col-lg-1">
 						<a ng-click="addCard(selectedDeck.id)">
 							<span class="glyphicon glyphicon-plus-sign"></span>
 						</a>
@@ -41,13 +42,13 @@
 	      	<ul class="nav nav-pills nav-stacked sortable" style="width:100%">
 	      		<li ng-repeat="card in selectedDeck.cards" id="{{card.id}}">
 	      			<div class="row" style="padding: 5px 0px;" >
-	      			<div class="col-md-3">
+	      			<div class="col-lg-3">
 	      				<span class="badge pc-httpmethod-badge">{{card.httpMethod}}</span>
 	      			</div>
-	      			<div class="col-md-6">
+	      			<div class="col-lg-6">
 	      				<a href="#/decks/{{selectedDeck.id}}/cards/{{card.id}}" class="pull-left"> {{card.name}}</a>
 	      			</div>
-					<div class="col-md-1">
+					<div class="col-lg-1">
 							<!--
 							<a ng-show="card.id != selectedCardId" href="#/decks/{{selectedDeck.id}}/cards/{{card.id}}/1">
 								<span class="glyphicon glyphicon-th-large"></span>
@@ -57,7 +58,7 @@
 								<span class="glyphicon glyphicon-th-large"></span>
 							</a>
 	      			</div>
-					<div class="col-md-1">
+					<div class="col-lg-1">
 							<a ng-click="removeCard(selectedDeck.id, card.id);">
 								<span class="glyphicon glyphicon-trash"></span>
 							</a>
