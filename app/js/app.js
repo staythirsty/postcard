@@ -54,7 +54,7 @@ postCardApp.directive('alert', function(){
 });
 
 
-postCardApp.factory('PostCardSvc', function() {
+postCardApp.factory('PostCardSvc2', function() {
 
 	var decks = [];
 
@@ -120,8 +120,11 @@ postCardApp.factory('PostCardSvc', function() {
 			localStorage.setItem("decks", saveObj);
 			console.log(localStorage.getItem("decks"));
 		},
-		getDeckById: function (deckId){
-			return _.find(this.getDecks(),function(deck){return deck.id == deckId});
+		getDeckById: function (deckId, callback){
+
+			//return _.find(this.getDecks(),function(deck){return deck.id == deckId});
+			
+
 		},
 		getSelectedDeck: function(){
 
@@ -155,4 +158,135 @@ postCardApp.factory('PostCardSvc', function() {
 
     }
 });
+
+
+postCardApp.factory('PostCardSvc', function() {
+
+
+	var selectedDeckID = localStorage.getItem("selectedDeckID");
+	var selectedDeck = null;
+	var decks = [];
+	var database;
+	var initCompletedFlag = 0;
+	var scopeContainer = [];
+
+  return {
+
+  		init: function(scope){
+
+  			switch(initCompletedFlag){
+				case 1:
+					scopeContainer.push(scope);
+					return;
+				case 2:
+					scope.init();
+					return;
+				default:
+			  		initCompletedFlag = 1;
+					scopeContainer.push(scope);
+			}
+
+			var request = indexedDB.open("postcarddb",3);
+
+			request.onerror = function(event) {
+				console.error("Unable to Open Indexed Database")
+			};
+
+			request.onupgradeneeded = function(event) {
+
+				console.log("Database Upgrade Event");
+				
+				database = event.target.result;
+
+				var objectStore = database.createObjectStore("decks", { autoIncrement : true });
+
+				objectStore.transaction.oncomplete = function(event) {
+		    		// Store values in the newly created objectStore.
+		    		var tempDeck = new Deck("My Deck");
+		    		tempDeck.add("My Card");
+		    		var decksObjectStore = database.transaction("decks", "readwrite").objectStore("decks");
+				    var idxRequest = decksObjectStore.add(tempDeck);
+				    idxRequest.onsuccess = function(event){
+				   	 	selectedDeckID = event.target.result.key;
+						localStorage.setItem("selectedDeckID", selectedDeckID);
+
+				    }
+		  		}
+			}
+
+			request.onsuccess = function(event){
+
+				database = event.target.result; // db.version will be 3.
+
+				var decksObjectStore = database.transaction("decks", "readwrite").objectStore("decks");
+
+				decksObjectStore.openCursor().onsuccess = function(evt) {
+					
+					var cursor = evt.target.result;
+
+					if(selectedDeck == null){
+						selectedDeckID = cursor.key;
+						localStorage.setItem("selectedDeckID",selectedDeckID);
+					}
+
+					if (cursor) {
+
+						var tempDeck = new Deck();
+						tempDeck.restore(cursor.value);
+						decks.push(tempDeck);
+
+						if(selectedDeckID == cursor.key){
+							selectedDeck = tempDeck;
+						}
+		            	cursor.continue();
+		         	}
+
+					var tempMaxCardId = 0;
+					_.each(selectedDeck.cards, function(card){
+						if(tempMaxCardId < card.id){
+							tempMaxCardId = card.id;
+						}
+					});
+					Card.counter = tempMaxCardId + 1;
+
+
+					console.log("# of decks" + decks.length);
+					console.log("selectedDeckID" + selectedDeckID);
+					console.log("selectedDeck" + selectedDeck.name);
+					console.log("Card.counter" + Card.counter);
+
+					initCompletedFlag = 2;
+					for (var i = scopeContainer.length - 1; i >= 0; i--) {
+						scopeContainer[i].init();
+					}
+					scopeContainer = [];
+				};
+
+			}
+  		},
+	  	getDecks: function () {
+	    	return decks;                   
+		},
+		saveDecks: function() {
+			console.log("Saved Deck");
+			_.each(decks,function(deck){
+				var decksObjectStore = database.transaction("decks", "readwrite").objectStore("decks");
+				decksObjectStore.put(deck,deck.id);
+				console.log("Saved Deck ID " + deck.id);
+			});
+			
+		},
+		getDeckById: function (deckId){
+			return _.find(this.getDecks(),function(deck){return deck.id == deckId});
+		},
+		getSelectedDeck: function(){
+			return selectedDeck;
+		},
+		setSelectedDeck: function(deck){
+			selectedDeck = deck;
+			localStorage.setItem('selectedDeckID', deck.id);	
+		}
+    }
+});
+
 

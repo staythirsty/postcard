@@ -11,7 +11,7 @@ function Deck(name){
 }
 
 
-Deck.counter = 0;
+Deck.counter = 1;
 
 Deck.HEADER = {};
 Deck.HEADER.INIT = {'key' : '' , 'value' : ''};
