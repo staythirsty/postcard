@@ -1,0 +1,17 @@
+{
+  "name": "PostCard",
+  "description": "Post Card",
+  "manifest_version" : 2,
+  "version": "2.0",
+  "app": {
+    "launch": {
+      "local_path": "app/index.html"
+    }
+  },
+  "permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "icons": { "16": "pc-logo-16.png", "128": "pc-logo-128.png" },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
