@@ -293,6 +293,9 @@ postCardApp.factory('PostCardSvc', function() {
 				decks.push(new Deck("My Deck"));
 			}
 
+			var decksObjectStore = database.transaction("decks", "readwrite").objectStore("decks");
+			decksObjectStore.delete(deckId);
+			
 			this.setSelectedDeck(decks[0]);
 
 		}
