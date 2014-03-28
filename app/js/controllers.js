@@ -65,12 +65,13 @@ function DecksCtrl($scope, $log, $route, $routeParams, $location, PostCardSvc){
 
 }
 
-function DeckCtrl($scope,  $routeParams, PostCardSvc){
+function DeckCtrl($scope,  $routeParams, $location, PostCardSvc){
 
 	$scope.init = function(){
 
 		$scope.deck = PostCardSvc.getDeckById($routeParams.deckId);
 		$scope.$$phase || $scope.$apply();
+
 	}
 
 	PostCardSvc.init($scope);
@@ -179,6 +180,12 @@ function DeckCtrl($scope,  $routeParams, PostCardSvc){
 		}catch(err){
 			$scope.setAlert(err);
 		}
+	}
+
+	$scope.deleteDeck = function(){
+		console.log("Deleting Deck ID " + $scope.deck.id);
+		PostCardSvc.deleteSelectedDeck($scope.deck.id);
+		$location.path('/decks/_/cards/_');
 	}
 }
 

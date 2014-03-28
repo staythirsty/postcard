@@ -273,8 +273,7 @@ postCardApp.factory('PostCardSvc', function() {
 				var decksObjectStore = database.transaction("decks", "readwrite").objectStore("decks");
 				decksObjectStore.put(deck,deck.id);
 				console.log("Saved Deck ID " + deck.id);
-			});
-			
+			});			
 		},
 		getDeckById: function (deckId){
 			return _.find(this.getDecks(),function(deck){return deck.id == deckId});
@@ -285,6 +284,17 @@ postCardApp.factory('PostCardSvc', function() {
 		setSelectedDeck: function(deck){
 			selectedDeck = deck;
 			localStorage.setItem('selectedDeckID', deck.id);	
+		},
+		deleteSelectedDeck: function(deckId){
+
+			decks = _.reject(this.getDecks(),function(deck){return deck.id == deckId});
+
+			if(decks.length == 0){
+				decks.push(new Deck("My Deck"));
+			}
+
+			this.setSelectedDeck(decks[0]);
+
 		}
     }
 });

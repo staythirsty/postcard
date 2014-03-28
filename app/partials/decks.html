@@ -128,6 +128,29 @@
 			  </div>
 
 
+			<div class="form-group">
+			    <div class="col-lg-4 col-lg-offset-4">
+			    	<button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#confirm-modal">Delete Deck</button>
+			    </div>
+			</div>
+
+			<div id="confirm-modal" class="modal fade">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			        <h4 class="modal-title">Delete Deck</h4>
+			      </div>
+			      <div class="modal-body">
+			        <p>Delete Deck. This action cannot be undone. Do you want to proceed?</p>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-danger" data-dismiss="modal" ng-click="deleteDeck()">Yes</button>
+			        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+			      </div>
+			    </div><!-- /.modal-content -->
+			  </div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
 		  
 			</form>
 
